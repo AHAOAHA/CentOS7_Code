@@ -1,5 +1,5 @@
-test:test.c
+main:main.c
 	gcc $^ -o $@
 .PHONY:clean
 clean:
-	rm -f test
+	rm -f main

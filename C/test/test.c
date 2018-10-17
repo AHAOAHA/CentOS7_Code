@@ -27,9 +27,32 @@ int main()
 }
 */
 
-
+/*
+void fun1()
+{
+  while(1);
+}
+*/
+/*
+#include<stdio.h>
+#include<stdlib.h>
 int main()
 {
-  system("ls -a");
+  
+  int count = 100;
+  while(count--)
+  {
+    printf("hello world\n"); 
+  }
+  
+  char cmd[20];
+  scanf("%s",cmd);
+  system(cmd);
   return 0;
+}
+*/
+#include"test.h"
+void test()
+{
+  printf("hello\n");
 }
