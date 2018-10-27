@@ -1,4 +1,4 @@
-#include"date_class.h"
+#include"date.h"
 #include<iostream>
 int main()
 {
@@ -7,8 +7,9 @@ int main()
   Date d3(d1);
   d3.print();
   std::cout<<std::endl;
-  d3 -= -10000;
+  d3 += -10000;
   d3.print();
   std::cout<<std::endl;
+  printf("%d\n", d2 - d1);
   return 0;
 }
