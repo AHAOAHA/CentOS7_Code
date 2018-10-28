@@ -15,7 +15,7 @@ Date::Date(int year,int month, int day)
   _day = day;
 }
 
-Date::Date(Date& d)
+Date::Date(const Date& d)
 {
   _year = d._year;
   _month = d._month;
@@ -60,14 +60,14 @@ bool Date::operator>(const Date& d)const
   }
   return false;
 }
-Date Date::operator+(const int count)
+Date Date::operator+(const int count)const
 {
   Date temp(*this);
   temp += count;
   return temp;
 }
 
-Date Date::operator-(const int count)
+Date Date::operator-(const int count)const
 {
   Date temp(*this);
   temp -= count;
@@ -127,7 +127,7 @@ Date& Date::operator-=(const int count)
 /*
  * 日期减日期
  */
-int Date::operator-(const Date& d)
+int Date::operator-(const Date& d)const
 {
   Date min;
   Date max;
@@ -172,4 +172,39 @@ int Date::get_month_day(int year, int month)
     return 29;
   }
   return array[month];
+}
+
+ostream& operator<<(ostream& out, const Date& d)
+{
+  out << d._year << "/" << d._month << "/" << d._day;
+  return out;
+}
+
+istream& operator>>(istream& in, Date& d)
+{
+  do
+  {
+    cout << "year: ";
+    in >> d._year;
+  }while(d._year <= 0);
+  do
+  {
+    cout << "month: ";
+    in >> d._month;
+  }while(d._month <= 0 || d._month > 12);
+  do
+  {
+    cout << "day: ";
+    in >> d._day;
+  }while(d._day <= 0 || d._day > Date::get_month_day(d._year, d._month));
+
+  return in;
+}
+
+int Date::sort_in_year()const
+{
+  Date temp(*this);
+  temp._day = 1;
+  temp._month = 1;
+  return *this - temp;
 }

@@ -5,11 +5,10 @@ int main()
   Date d1(2018,10,21);
   Date d2(1998,07,21);
   Date d3(d1);
-  d3.print();
-  std::cout<<std::endl;
+  cout<<d3.sort_in_year()<<endl;
+  std::cout<<d1<<std::endl;
   d3 += -10000;
-  d3.print();
-  std::cout<<std::endl;
+  std::cout<<d3<<std::endl; 
   printf("%d\n", d2 - d1);
   return 0;
 }
