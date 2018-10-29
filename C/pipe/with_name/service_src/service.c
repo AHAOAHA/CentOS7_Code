@@ -11,10 +11,12 @@ int main()
     while(1)
     {
       ssize_t s;
+      printf("Please wait...\n");
       s = read(fd, buf, sizeof(buf));
       //sleep(3);
-      if(0 == strcmp(buf,"quit\n"))
+      if(0 == strcmp(buf,"quit\n"))//客户端向服务端发送退出信号
       {
+        printf("quit signal,Bye...\n");
         break;
       }
       if(s > 0)
@@ -22,8 +24,11 @@ int main()
         printf("client$ %s",buf);
         fflush(stdout);
       }
-      else if(s == 0)
+      else if(s == 0)//客户端退出
+      {
+        printf("client quit...\n");
         break;
+      }
     }
   
   close(fd);//关闭管道
