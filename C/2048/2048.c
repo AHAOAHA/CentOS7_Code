@@ -6,10 +6,22 @@ void Proc()
   char buf[100] = {'\0'};
   int i = 0;
   char flag[4] = {'-', '\\', '|', '/'};
+
+  printf("\033[2J");
+  printf("\033[0;0H");
+  FILE* fp = fopen("./file","r");
+  char file;
+  while((file = fgetc(fp))!=EOF)
+  {
+    printf("%c\033[?25l", file);
+    usleep(1000);
+    fflush(stdout);
+  }
+  fclose(fp);
   while(i < 70)
   {
     buf[i] = '#';
-    printf("[%-70s] %c \r",buf, flag[i%4]);
+    printf("          [%-70s] %c \r",buf, flag[i%4]);
     usleep(10000);
     fflush(stdout);
     i += 1;
@@ -123,7 +135,7 @@ void MoveMap(int array[ROW][COL])
 		MovePointD(array);
 		break;
   case 'q':
-    printf("quit...\r\n");
+    printf("quit...\r\n\033[?25h");
     exit(0);
 	default:printf("非法输入！\n");
 		break;
