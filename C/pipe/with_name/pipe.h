@@ -23,5 +23,5 @@
 #include<unistd.h>
 #include<string.h>
 
-
+#define BUF_SIZE 1024
 #endif

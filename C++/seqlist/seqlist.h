@@ -38,6 +38,7 @@ class SeqList
 
   private:
     void swap(DateType& data1, DateType& data2);
+    int capacity_increase();
     size_t _capacity;
     size_t _size;
     DateType* _ptr;

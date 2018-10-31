@@ -30,8 +30,11 @@ void SeqList::push_back(DateType data)
 {
   if(!empty())
   {
-    printf("capacity == size...\n");
-    return;
+    if(-1 == capacity_increase())
+    {
+      printf("capacity increase defeate...\n");
+      return;
+    }
   }
 
   _ptr[_size] = data;
@@ -47,8 +50,11 @@ void SeqList::push_front(DateType data)
 {
   if(!empty())
   {
-    printf("size == capacity...\n");
-    return;
+    if(-1 == capacity_increase())
+    {
+      printf("capacity increase defeate...\n");
+      return;
+    }
   }
 
   int i = _size;
@@ -81,8 +87,11 @@ void SeqList::insert_pos(size_t pos, DateType data)
 {
   if(pos > _capacity)
   {
-    printf("pos error...\n");
-    return;
+    if(-1 == capacity_increase())
+    {
+      printf("capacity increase defeate...\n");
+      return;
+    }
   }
   if(!empty())
   {
@@ -236,4 +245,20 @@ int SeqList::binary_search_R(size_t left, size_t right, DateType data)
     pos = binary_search_R(middle + 1, right, data);
   }
   return pos;
+}
+
+int SeqList::capacity_increase()
+{
+  _capacity = _capacity*2 + 3;
+  DateType* newptr = new DateType[_capacity];
+  if(newptr == nullptr)
+    return -1;
+  size_t i = 0;
+  for(i = 0; i < _size; ++i)
+  {
+    newptr[i] = _ptr[i];
+  }
+  delete[] _ptr;
+  _ptr = newptr;
+  return 0;
 }

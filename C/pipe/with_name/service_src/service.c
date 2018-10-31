@@ -3,7 +3,7 @@
 int main()
 {
   int fd;
-  char buf[1024] = {0};
+  char buf[BUF_SIZE] = {0};
   umask(0);
   mkfifo("/tmp/PIPE_SERVICE", 0644);
 
@@ -13,22 +13,18 @@ int main()
       ssize_t s;
       printf("Please wait...\n");
       s = read(fd, buf, sizeof(buf));
+      if(s <= 0)
+      {
+        break;
+      }
       //sleep(3);
       if(0 == strcmp(buf,"quit\n"))//客户端向服务端发送退出信号
       {
         printf("quit signal,Bye...\n");
         break;
       }
-      if(s > 0)
-      {
-        printf("client$ %s",buf);
-        fflush(stdout);
-      }
-      else if(s == 0)//客户端退出
-      {
-        printf("client quit...\n");
-        break;
-      }
+      printf("client$ %s",buf);
+      fflush(stdout);
     }
   
   close(fd);//关闭管道

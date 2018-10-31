@@ -27,7 +27,7 @@ void test_pipe()
   if(pipe(fd) == -1)//匿名管道打开失败
   {
     printf("管道创建失败！\n");
-    exit(-1);
+    exit(EXIT_FAILURE);
   }
 
   pid_t id = fork();//确保子进程先运行
@@ -39,17 +39,17 @@ void test_pipe()
   }
   else if(0 == id)//子进程
   {
-    int i = 1;
+    int i = 0;
     close(fd[0]);//关闭子进程的读端
-    strcpy(buf,"hello father!\n");
-    while(1)
+    strcpy(buf, "hello, i am child...\n");
+    while(i < 10)
     {
-      i+=1;
-      write(fd[1], buf, strlen(buf));
-      printf("%d\n",i);
+      i += 1;
+      write(fd[1], buf, sizeof(buf));
     }
-
+    while(1);
     close(fd[1]);
+
     
   }
   else//父进程
@@ -57,14 +57,15 @@ void test_pipe()
     close(fd[1]);
     while(1)
     {
-      read(fd[0], buf, 32);
-      printf("%s\n",buf);
-      //sleep(1);
+
+      read(fd[0], buf, sizeof(buf));
+      printf("%s",buf);
+      fflush(stdout);
+      sleep(1);
     }
   
     while(wait(NULL)!=id);
     close(fd[0]);
-
   }
 }
 int main()
