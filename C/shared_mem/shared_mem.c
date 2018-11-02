@@ -2,7 +2,8 @@
 
 int CreatShm(size_t size)
 {
-  return shmget(ftok(PATHNAME, PRO_ID), size, IPC_CREAT | IPC_EXCL);
+  umask(0);
+  return shmget(ftok(PATHNAME, PRO_ID), size, IPC_CREAT | IPC_EXCL | 0644);
 }
 
 int DestoryShm(int shmid)
@@ -10,7 +11,11 @@ int DestoryShm(int shmid)
   return shmctl(shmid, IPC_RMID, NULL);
 }
 
+int GetShm(int size)
+{
+  return shmget(ftok(PATHNAME, PRO_ID), size, IPC_CREAT);
+}
 void* LinkShm(int shmid)
 {
-  return shmat(shmid, NULL, SHM_RDONLY);
+  return shmat(shmid, NULL, 0);
 }
