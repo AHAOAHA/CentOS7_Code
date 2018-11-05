@@ -20,6 +20,7 @@ int main()
     sleep(1);
 
   }
+ CutShm(shmp);
  DestoryShm(shmid);
 
   return 0;

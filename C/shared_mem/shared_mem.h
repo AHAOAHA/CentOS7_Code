@@ -23,6 +23,6 @@ int CreatShm(size_t size);
 int DestoryShm(int shmid);
 int GetShm(int size);
 void* LinkShm(int shmid);
-
+int CutShm(const void* shmaddr);
 
 #endif

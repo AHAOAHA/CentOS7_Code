@@ -1,5 +1,10 @@
 #include"shared_mem.h"
 
+int CutShm(const void* shmaddr)
+{
+  return shmdt(shmaddr);
+}
+
 int CreatShm(size_t size)
 {
   umask(0);

@@ -5,6 +5,7 @@ int main()
   char* shmp;
   shmid = GetShm(1024);
   shmp = LinkShm(shmid);
+  printf("%x\n", shmp);
   if(-1 == (int)shmp)
     exit(EXIT_FAILURE);
   while(1)
@@ -19,5 +20,6 @@ int main()
     }
     sleep(1);
   }
+  CutShm(shmp);
   return 0;
 }
