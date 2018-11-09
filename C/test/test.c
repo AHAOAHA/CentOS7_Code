@@ -1,17 +1,12 @@
-#include<unistd.h>
-#include<sys/types.h>
 #include<stdio.h>
-#include<sys/stat.h>
-#include<fcntl.h>
-
+#include<sys/types.h>
+#include<unistd.h>
+#include<signal.h>
+#include<string.h>
+#include<errno.h>
 int main()
 {
-  
-  char buf[64];
-  FILE* f = fopen("file", "r");
-  fgets(buf, 64, f);
-
-  printf("%s",buf);
-  fclose(f);
+  printf("%d\n", errno);
+  printf("%s\n", strerror(1));
   return 0;
 }

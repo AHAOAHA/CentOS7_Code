@@ -1,5 +1,5 @@
-test:test.c snake.c
+signal:signal.c
 	gcc $^ -o $@ -g
 .PHONY:clean
 clean:
-	rm -f test
+	rm -f signal
