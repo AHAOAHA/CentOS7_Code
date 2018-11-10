@@ -1,5 +1,5 @@
-signal:signal.c
+main:main.c
 	gcc $^ -o $@ -g
 .PHONY:clean
 clean:
-	rm -f signal
+	rm -f main
