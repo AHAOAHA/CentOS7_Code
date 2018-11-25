@@ -37,7 +37,7 @@ int main()
       printf("i am child...\n");
       sleep(1);
     }
-    exit(-1);
+    printf("i quit...\n");
   }
   else
   {
@@ -45,7 +45,7 @@ int main()
     sigset_t newblock;
     sigemptyset(&newblock);
     sigaddset(&newblock, SIGCHLD);
-    sigaddset(&newblock, 2);
+    //sigaddset(&newblock, 2);
     sigprocmask(SIG_SETMASK, &newblock, NULL);
     sigemptyset(&set);
     while(1)
