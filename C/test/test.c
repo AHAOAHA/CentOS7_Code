@@ -1,10 +1,16 @@
 #include<stdio.h>
-int test_val = 1000;
-static int test2_val = 2000;
+#include<unistd.h>
+#include<stdlib.h>
+
+int (*func)(int, int);
+
+int add(int x, int y)
+{
+  return x+y;
+}
 int main()
 {
-  int val = 10;
-  static int test1_val = 200;
-  printf("hello world\n");
+  int ret = func(1, 2);
+  printf("%d\n", ret);
   return 0;
 }

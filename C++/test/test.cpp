@@ -2,18 +2,16 @@
 #include<string>
 #include<iostream>
 #include<map>
+#include<unistd.h>
 using namespace std;
-class test
-{
-  private:
-    int a = 1;
-};
+
+static int sum = 10;
 int main()
 {
-  map<string, string> a;
-  map<string, string>::iterator it= a.begin();
-  auto b = it;
-  cout<<typeid(b).name()<<endl;
-  cout<<typeid(it).name()<<endl;
+  while(1)
+  {
+    cout << sum <<endl;
+    sleep(1);
+  }
   return 0;
 }

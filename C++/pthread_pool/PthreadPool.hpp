@@ -18,16 +18,14 @@ class Task
   typedef int (*cal_t)(int, int);
   public:
   Task(int x, int y, cal_t handler)
-    :_x(x)
+    :_handler(handler)
+     ,_x(x)
      ,_y(y)
-     ,_handler(handler)
   {}
 
   int Run()
   {
-    cout << "thread "<< pthread_self() <<" is run ...";
     int ret =  _handler(_x, _y);
-    cout << "answer is :" << ret << endl;
     return ret;
   }
 
@@ -70,6 +68,13 @@ class ThreadPool
     {
       //当主线程向队列中添加任务时，应当为临界资源加锁
       LockQueue();
+
+      if((int)_task_queue.size() == _threadNum)
+      {
+        //如果任务队列中队列已经满了，则不能添加此处任务，应当释放锁并退出
+        UnlockQueue();
+        return;
+      }
       _task_queue.push(t);
       UnlockQueue();
       //主线程添加任务完毕，应当给正在条件变量队列中等待任务的一个进程发送信号
@@ -80,6 +85,8 @@ class ThreadPool
   private:
     static void* start_routine(void *arg)
     {
+      //主线程不需要等待其他线程，则这里进行线程分离
+      pthread_detach(pthread_self());
       ThreadPool* tp = (ThreadPool*)arg;
       for(;;)
       {
