@@ -22,8 +22,11 @@ int main()
 {
   pthread_t id;
   void *arg = nullptr;
-  pthread_create(&id, nullptr, rontine_start, (void*)arg);
-  pthread_detach(id);
+  for(size_t i = 0; i < 5; ++i)
+  {
+    pthread_create(&id, nullptr, rontine_start, (void*)arg);
+    pthread_detach(id);
+  }
 
   while(1);
   return 0;
