@@ -120,26 +120,34 @@ void move_up()
     //吃到食物
     grow_up();
   }
-  struct snake_node *ptr = snake_head;
-  struct snake_node * ppre = ptr;
-  struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
-  new_head->_x = ptr->_x - 1;
-  new_head->_y = ptr->_y;
-  map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = snake_head;
-  snake_head = new_head;
-
-  while(ptr->_next)
+  else if(2 == map[(snake_head)->_x - 1][(snake_head)->_y])
   {
-    ptr = ptr->_next;
-    if(NULL != ptr->_next)
-      ppre = ppre->_next;
+    printf("吃自己了\n");
+    exit(1);
   }
+  else
+  {
+    struct snake_node *ptr = snake_head;
+    struct snake_node * ppre = ptr;
+    struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
+    new_head->_x = ptr->_x - 1;
+    new_head->_y = ptr->_y;
+    map[new_head->_x][new_head->_y] = 2;
+    new_head->_next = snake_head;
+    snake_head = new_head;
+    
+    while(ptr->_next)
+    {
+      ptr = ptr->_next;
+      if(NULL != ptr->_next)
+        ppre = ppre->_next;
+    }
 
-  ppre->_next = NULL;
+    ppre->_next = NULL;
 
-  map[ptr->_x][ptr->_y] = 0;
-  free(ptr);
+    map[ptr->_x][ptr->_y] = 0;
+    free(ptr);
+  }
 }
 
 void move_down()
@@ -154,26 +162,34 @@ void move_down()
     //吃到食物
     grow_up();
   }
-
-  struct snake_node *ptr = snake_head;
-  struct snake_node *ppre = ptr;
-  struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
-  new_head->_x = ptr->_x + 1;
-  new_head->_y = ptr->_y;
-  map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = snake_head;
-  snake_head = new_head;
-
-  while(ptr->_next)
+  else if(2 == map[(snake_head)->_x + 1][(snake_head)->_y])
   {
-    ptr = ptr->_next;
-    if(NULL != ptr->_next)
-      ppre = ppre->_next;
+    printf("吃自己了\n");
+    exit(1);
   }
-  ppre->_next = NULL;
+  else
+  {
 
-  map[ptr->_x][ptr->_y] = 0;
-  free(ptr);
+    struct snake_node *ptr = snake_head;
+    struct snake_node *ppre = ptr;
+    struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
+    new_head->_x = ptr->_x + 1;
+    new_head->_y = ptr->_y;
+    map[new_head->_x][new_head->_y] = 2;
+    new_head->_next = snake_head;
+    snake_head = new_head;
+    
+    while(ptr->_next)
+    {
+      ptr = ptr->_next;
+      if(NULL != ptr->_next)
+        ppre = ppre->_next;
+    }
+    ppre->_next = NULL;
+
+    map[ptr->_x][ptr->_y] = 0;
+    free(ptr);
+  }
 }
 
 
@@ -189,25 +205,33 @@ void move_right()
     //吃到食物
     grow_up();
   }
-  struct snake_node *ptr = snake_head;
-  struct snake_node *ppre = ptr;
-  struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
-  new_head->_x = ptr->_x;
-  new_head->_y = ptr->_y + 1;
-  map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = snake_head;
-  snake_head = new_head;
-
-  while(ptr->_next)
+  else if(2 == map[(snake_head)->_x][(snake_head)->_y + 1])
   {
-    ptr = ptr->_next;
-    if(NULL != ptr->_next)
-      ppre = ppre->_next;
+    printf("吃自己了\n");
+    exit(1);
   }
-  ppre->_next = NULL;
+  else
+  {
+    struct snake_node *ptr = snake_head;
+    struct snake_node *ppre = ptr;
+    struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
+    new_head->_x = ptr->_x;
+    new_head->_y = ptr->_y + 1;
+    map[new_head->_x][new_head->_y] = 2;
+    new_head->_next = snake_head;
+    snake_head = new_head;
+    
+    while(ptr->_next)
+    {
+      ptr = ptr->_next;
+      if(NULL != ptr->_next)
+        ppre = ppre->_next;
+    }
+    ppre->_next = NULL;
 
-  map[ptr->_x][ptr->_y] = 0;
-  free(ptr);
+    map[ptr->_x][ptr->_y] = 0;
+    free(ptr);
+  }
 }
 
 
@@ -225,25 +249,34 @@ void move_left()
     grow_up();
     
   }
-  struct snake_node *ptr = snake_head;
-  struct snake_node *ppre = ptr;
-  struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
-  new_head->_x = ptr->_x;
-  new_head->_y = ptr->_y - 1;
-  map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = snake_head;
-  snake_head = new_head;
-
-  while(ptr->_next)
+  else if(2 == map[(snake_head)->_x][(snake_head)->_y - 1])
   {
-    ptr = ptr->_next;
-    if(NULL != ptr->_next)
-      ppre = ppre->_next;
+    printf("吃自己了\n");
+    exit(1);
   }
-  ppre->_next = NULL;
+  else
+  {
+    struct snake_node *ptr = snake_head;
+    struct snake_node *ppre = ptr;
+    struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
+    new_head->_x = ptr->_x;
+    new_head->_y = ptr->_y - 1;
+    map[new_head->_x][new_head->_y] = 2;
+    new_head->_next = snake_head;
+    snake_head = new_head;
+    
 
-  map[ptr->_x][ptr->_y] = 0;
-  free(ptr);
+    while(ptr->_next)
+    {
+      ptr = ptr->_next;
+      if(NULL != ptr->_next)
+        ppre = ppre->_next;
+    }
+    ppre->_next = NULL;
+
+    map[ptr->_x][ptr->_y] = 0;
+    free(ptr);
+  }
 }
 
 
@@ -317,11 +350,14 @@ void print()
       else if(map[row][col] == 3)
         printf("*");
       else
-        printf("@");
+        printf("*");
+
 
     }
     printf("\n");
   }
+
+  printf("w:up a:left s:down d:right Author: AHOAHA\n");
 }
 
 void init_border()

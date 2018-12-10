@@ -10,6 +10,8 @@
 
 #define ROW 28//行
 #define COL 104//列
+//#define ROW 10
+//#define COL 10
 
 #define U 1//带表蛇的状态 up
 #define D 2//down
