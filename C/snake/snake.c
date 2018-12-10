@@ -1,73 +1,133 @@
 #include"./snake.h"
 
-void insert_head(int map[ROW][COL],struct snake_node** head,struct pos pos)
+struct snake_node* snake_head;
+int status = U;
+int map[ROW][COL] = {0};//定义游戏地图,0为游戏地图，1为边框，2为蛇身，3为食物
+
+pthread_mutex_t mutex;
+pthread_cond_t cond;
+
+void insert_head(struct pos pos)
 {
   struct snake_node* new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
   new_head->_x = pos._x;
   new_head->_y = pos._y;
-  new_head->_next = *head;
+  new_head->_next = snake_head;
   map[new_head->_x][new_head->_y] = 2;
-  *head = new_head;
+  snake_head = new_head;
 }
 
-void grow_up(int map[ROW][COL],struct snake_node** head, int status)
+void grow_up()
 {
   struct pos pos;
   switch(status)
   {
     case U:
-           pos._x = (*head)->_x - 1;
-           pos._y = (*head)->_y;
-          insert_head(map,head,pos);
+           pos._x = (snake_head)->_x - 1;
+           pos._y = (snake_head)->_y;
+          insert_head(pos);
       break;
     case D:
-           pos._x = (*head)->_x + 1;
-           pos._y = (*head)->_y;
-          insert_head(map,head,pos);
+           pos._x = (snake_head)->_x + 1;
+           pos._y = (snake_head)->_y;
+          insert_head(pos);
       break;
     case R:
-           pos._x = (*head)->_x;
-           pos._y = (*head)->_y + 1;
-          insert_head(map,head,pos);
+           pos._x = (snake_head)->_x;
+           pos._y = (snake_head)->_y + 1;
+          insert_head(pos);
       break;
     case L:
-           pos._x = (*head)->_x;
-           pos._y = (*head)->_y - 1;
-          insert_head(map,head,pos);
+           pos._x = (snake_head)->_x;
+           pos._y = (snake_head)->_y - 1;
+          insert_head(pos);
       break;
     default:
       break;
   }
-  create_food(map);
+  create_food();
 }
 
-void control_snake(int map[ROW][COL], struct snake_node** head, int* status)
+void* PthreadConPoint(void* arg)
+{
+  char tmp;
+  disable_terminal_return();
+  while(1)
+  {
+	  tmp = getchar();
+    
+    pthread_mutex_lock(&mutex);
+    switch(tmp)
+    {
+      case 'a':
+        if(status != 4)
+          status = 3;
+        break;
+      case 'w':
+        if(status != 2)
+        status = 1;
+        break;
+      case 's':
+        if(status != 1)
+          status = 2;
+        break;
+      case 'd':
+        if(status != 3)
+        status = 4;
+        break;
+      default:
+        break;
+    }
+
+    pthread_mutex_unlock(&mutex);
+  }
+  return arg;
+}
+
+void* PthreadMovSnake(void* arg)
+{
+  while(1)
+  {
+    pthread_mutex_lock(&mutex);
+    snake_move();
+    print();
+    pthread_mutex_unlock(&mutex);
+    usleep(100000);
+  }
+  return arg;
+}
+void control_snake()
 {
   //控制蛇身
   //这里需要采用多线程控制，暂停之，待学习多线程之后继续进行
-  snake_move(map, head, *status); 
+  pthread_t con_point;
+  pthread_create(&con_point, NULL, PthreadConPoint, NULL);
+  pthread_detach(con_point);
+  pthread_t mov_snake;
+  pthread_create(&mov_snake, NULL, PthreadMovSnake, NULL);
+  pthread_detach(mov_snake);
 }
 
-void move_up(int map[ROW][COL],struct snake_node **head)
+void move_up()
 {
-  if(1==map[(*head)->_x - 1][(*head)->_y])
+  if(1==map[(snake_head)->_x - 1][(snake_head)->_y])
   {
     printf("碰到墙了\n");
     exit(1);
   }
-  else if(3 == map[(*head)->_x - 1][(*head)->_y])
+  else if(3 == map[(snake_head)->_x - 1][(snake_head)->_y])
   {
     //吃到食物
-    grow_up(map,head,U);
+    grow_up();
   }
-  struct snake_node *ptr = *head;
+  struct snake_node *ptr = snake_head;
   struct snake_node * ppre = ptr;
   struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
   new_head->_x = ptr->_x - 1;
   new_head->_y = ptr->_y;
   map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = *head;
-  *head = new_head;
+  new_head->_next = snake_head;
+  snake_head = new_head;
 
   while(ptr->_next)
   {
@@ -82,27 +142,27 @@ void move_up(int map[ROW][COL],struct snake_node **head)
   free(ptr);
 }
 
-void move_down(int map[ROW][COL],struct snake_node **head)
+void move_down()
 {
-  if(1 == map[(*head)->_x + 1][(*head)->_y])
+  if(1 == map[(snake_head)->_x + 1][(snake_head)->_y])
   {
     printf("碰到墙了\n");
     exit(1);
   }
-  else if(3 == map[(*head)->_x + 1][(*head)->_y])
+  else if(3 == map[(snake_head)->_x + 1][(snake_head)->_y])
   {
     //吃到食物
-    grow_up(map,head,D);
+    grow_up();
   }
 
-  struct snake_node *ptr = *head;
+  struct snake_node *ptr = snake_head;
   struct snake_node *ppre = ptr;
   struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
   new_head->_x = ptr->_x + 1;
   new_head->_y = ptr->_y;
   map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = *head;
-  *head = new_head;
+  new_head->_next = snake_head;
+  snake_head = new_head;
 
   while(ptr->_next)
   {
@@ -117,26 +177,26 @@ void move_down(int map[ROW][COL],struct snake_node **head)
 }
 
 
-void move_right(int map[ROW][COL],struct snake_node **head)
+void move_right()
 {
-  if(1 == map[(*head)->_x][(*head)->_y + 1])
+  if(1 == map[(snake_head)->_x][(snake_head)->_y + 1])
   {
     printf("碰到墙了\n");
     exit(1);
   }
-  else if(3 == map[(*head)->_x][(*head)->_y + 1])
+  else if(3 == map[(snake_head)->_x][(snake_head)->_y + 1])
   {
     //吃到食物
-    grow_up(map,head,R);
+    grow_up();
   }
-  struct snake_node *ptr = *head;
+  struct snake_node *ptr = snake_head;
   struct snake_node *ppre = ptr;
   struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
   new_head->_x = ptr->_x;
   new_head->_y = ptr->_y + 1;
   map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = *head;
-  *head = new_head;
+  new_head->_next = snake_head;
+  snake_head = new_head;
 
   while(ptr->_next)
   {
@@ -152,27 +212,27 @@ void move_right(int map[ROW][COL],struct snake_node **head)
 
 
 
-void move_left(int map[ROW][COL],struct snake_node **head)
+void move_left()
 {
-  if(1 == map[(*head)->_x][(*head)->_y - 1])
+  if(1 == map[(snake_head)->_x][(snake_head)->_y - 1])
   {
     printf("碰到墙了\n");
     exit(1);
   }
-  else if(3 == map[(*head)->_x][(*head)->_y - 1])
+  else if(3 == map[(snake_head)->_x][(snake_head)->_y - 1])
   {
     //吃到食物
-    grow_up(map,head,L);
+    grow_up();
     
   }
-  struct snake_node *ptr = *head;
+  struct snake_node *ptr = snake_head;
   struct snake_node *ppre = ptr;
   struct snake_node *new_head = (struct snake_node*)malloc(sizeof(struct snake_node));
   new_head->_x = ptr->_x;
   new_head->_y = ptr->_y - 1;
   map[new_head->_x][new_head->_y] = 2;
-  new_head->_next = *head;
-  *head = new_head;
+  new_head->_next = snake_head;
+  snake_head = new_head;
 
   while(ptr->_next)
   {
@@ -188,19 +248,18 @@ void move_left(int map[ROW][COL],struct snake_node **head)
 
 
 
-void snake_move(int map[ROW][COL], struct snake_node** head,int status)
+void snake_move()
 {
-  assert(head);
 
   switch(status)
   {
-    case U:move_up(map, head);
+    case U:move_up();
       break;
-    case D:move_down(map, head);
+    case D:move_down();
       break;
-    case R:move_right(map, head);
+    case R:move_right();
       break;
-    case L:move_left(map, head);
+    case L:move_left();
       break;
     default:
       exit(0);
@@ -208,7 +267,7 @@ void snake_move(int map[ROW][COL], struct snake_node** head,int status)
   }
 }
 
-void create_food(int map[ROW][COL])
+void create_food()
 {
   int food_x = 0;
   int food_y = 0;
@@ -218,13 +277,13 @@ void create_food(int map[ROW][COL])
     food_x = 1 + rand() % (ROW - 1 - 1);
     food_y = 1 + rand() % (COL - 1 - 1);
   }while(map[food_x][food_y] != 0);
+  
   map[food_x][food_y] = 3;
 
 }
 
-snake_node *create_snake(int map[ROW][COL])
+snake_node *create_snake()
 {
-  int i = 3;
   struct snake_node *head;
   head =(struct snake_node*)malloc(sizeof(struct snake_node));
   srand(time(NULL));//设置随机数种子
@@ -241,7 +300,7 @@ snake_node *create_snake(int map[ROW][COL])
   return head;
 }
 
-void print(int map[ROW][COL])
+void print()
 {
   int row = 0;
   int col = 0;
@@ -251,13 +310,21 @@ void print(int map[ROW][COL])
   {
     for(col = 0; col<COL; ++col)
     {
-      printf("%d ",map[row][col]);
+      if(map[row][col] == 0)
+        printf(" ");
+      else if(map[row][col] == 1)
+        printf("#");
+      else if(map[row][col] == 3)
+        printf("*");
+      else
+        printf("@");
+
     }
     printf("\n");
   }
 }
 
-void init_border(int map[ROW][COL])
+void init_border()
 {
   int row = 0;
   int col = 0;
@@ -273,19 +340,15 @@ void init_border(int map[ROW][COL])
   }
 }
 
+
 int game()
 {
-  struct snake_node* snake_head;
-  int status = U;
-  int map[ROW][COL] = {0};//定义游戏地图,0为游戏地图，1为边框，2为蛇身，3为食物
-  init_border(map);//初始化游戏边框
-  snake_head = create_snake(map);//创建蛇身
-  create_food(map);
-  while(1)
-  {
-    control_snake(map,&snake_head,&status);
-    print(map);
-    sleep(1);
-  }
+  pthread_mutex_init(&mutex, NULL);
+  pthread_cond_init(&cond, NULL);
+  init_border();//初始化游戏边框
+  snake_head = create_snake();//创建蛇身
+  create_food();
+  control_snake();
+  while(1);
   return 0;
 }

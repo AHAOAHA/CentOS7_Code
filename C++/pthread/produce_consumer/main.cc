@@ -4,6 +4,10 @@
 *mail: ahaoaha_@outlook.com
 *Created Time: Sat 08 Dec 2018 11:29:21 PM CST
  ************************************************************************/
+
+/*
+ * 线程版本实现生产者消费者模型
+ */
 #include<iostream>
 #include<queue>
 #include<unistd.h>
@@ -11,9 +15,9 @@
 std::queue<int> q;
 pthread_mutex_t mutex;
 pthread_cond_t cond;
+int i = 0;
 void* Produce_Start(void *arg)
 {
-  int i = 0;
   while(1)
   {
     pthread_mutex_lock(&mutex);
@@ -25,9 +29,11 @@ void* Produce_Start(void *arg)
 
     q.push(i++);
 
-    std::cout << "Produce doing ... " << i << std::endl;
+    std::cout << "Produce doing ... " << i<< " i am " << pthread_self() << std::endl;
     sleep(1);
     pthread_mutex_unlock(&mutex);
+    pthread_cond_signal(&cond);
+    usleep(1000);
   }
   return arg;
 }
@@ -45,7 +51,7 @@ void *ConsumeStart(void* arg)
   while(1)
   {
     pthread_mutex_lock(&mutex);
-    while(q.size() <= 0)
+    while(q.size() == 0)
     {
       pthread_cond_signal(&cond);
       pthread_cond_wait(&cond, &mutex);
@@ -56,6 +62,8 @@ void *ConsumeStart(void* arg)
     sleep(1);
 
     pthread_mutex_unlock(&mutex);
+    pthread_cond_signal(&cond);
+    usleep(100000);
   }
 
   return arg;
