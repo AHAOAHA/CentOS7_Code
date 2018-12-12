@@ -7,6 +7,9 @@
 #include<wait.h>
 #include<pthread.h>
 #include <termios.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<fcntl.h>
 
 #define ROW 28//行
 #define COL 104//列

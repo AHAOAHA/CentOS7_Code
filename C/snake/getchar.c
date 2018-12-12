@@ -4,6 +4,9 @@
 *mail: ahaoaha_@outlook.com
 *Created Time: Mon Dec 10 15:49:56 2018
  ************************************************************************/
+/*
+ * 不输入回车即读取字符
+ */
 
 #include"snake.h"
 static struct termios oldt;

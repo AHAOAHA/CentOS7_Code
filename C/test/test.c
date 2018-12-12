@@ -4,5 +4,7 @@
 #include<pthread.h>
 int main()
 {
+  close(1);
+  while(1);
   return 0;
 }

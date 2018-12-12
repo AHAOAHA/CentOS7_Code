@@ -4,6 +4,7 @@ struct snake_node* snake_head;
 int status = U;
 int map[ROW][COL] = {0};//定义游戏地图,0为游戏地图，1为边框，2为蛇身，3为食物
 
+int Level;
 pthread_mutex_t mutex;
 pthread_cond_t cond;
 
@@ -57,6 +58,7 @@ void* PthreadConPoint(void* arg)
 	  tmp = getchar();
     
     pthread_mutex_lock(&mutex);
+    pthread_cond_wait(&cond, &mutex);
     switch(tmp)
     {
       case 'a':
@@ -88,11 +90,20 @@ void* PthreadMovSnake(void* arg)
 {
   while(1)
   {
-    pthread_mutex_lock(&mutex);
     snake_move();
     print();
-    pthread_mutex_unlock(&mutex);
-    usleep(100000);
+    usleep(Level);
+  }
+  return arg;
+}
+
+void* PthreadMapPrint(void* arg)
+{
+  while(1)
+  {
+    //pthread_mutex_lock(&mutex);
+    //pthread_mutex_unlock(&mutex);
+    //usleep(50000);
   }
   return arg;
 }
@@ -101,7 +112,10 @@ void control_snake()
   //控制蛇身
   //这里需要采用多线程控制，暂停之，待学习多线程之后继续进行
   pthread_t con_point;
+  //struct sched_param sched;//设置线程的优先级
+  //sched.sched_priority = 10;
   pthread_create(&con_point, NULL, PthreadConPoint, NULL);
+  //pthread_setschedparam(con_point, SCHED_RR, &sched);
   pthread_detach(con_point);
   pthread_t mov_snake;
   pthread_create(&mov_snake, NULL, PthreadMovSnake, NULL);
@@ -112,7 +126,7 @@ void move_up()
 {
   if(1==map[(snake_head)->_x - 1][(snake_head)->_y])
   {
-    printf("碰到墙了\n");
+    printf("碰到墙了\n\033[?25h");
     exit(1);
   }
   else if(3 == map[(snake_head)->_x - 1][(snake_head)->_y])
@@ -122,7 +136,7 @@ void move_up()
   }
   else if(2 == map[(snake_head)->_x - 1][(snake_head)->_y])
   {
-    printf("吃自己了\n");
+    printf("吃自己了\n\033[?25h");
     exit(1);
   }
   else
@@ -154,7 +168,7 @@ void move_down()
 {
   if(1 == map[(snake_head)->_x + 1][(snake_head)->_y])
   {
-    printf("碰到墙了\n");
+    printf("碰到墙了\n\033[?25h");
     exit(1);
   }
   else if(3 == map[(snake_head)->_x + 1][(snake_head)->_y])
@@ -164,7 +178,7 @@ void move_down()
   }
   else if(2 == map[(snake_head)->_x + 1][(snake_head)->_y])
   {
-    printf("吃自己了\n");
+    printf("吃自己了\n\033[?25h");
     exit(1);
   }
   else
@@ -197,7 +211,7 @@ void move_right()
 {
   if(1 == map[(snake_head)->_x][(snake_head)->_y + 1])
   {
-    printf("碰到墙了\n");
+    printf("碰到墙了\n\033[?25h");
     exit(1);
   }
   else if(3 == map[(snake_head)->_x][(snake_head)->_y + 1])
@@ -207,7 +221,7 @@ void move_right()
   }
   else if(2 == map[(snake_head)->_x][(snake_head)->_y + 1])
   {
-    printf("吃自己了\n");
+    printf("吃自己了\n\033[?25h");
     exit(1);
   }
   else
@@ -240,7 +254,7 @@ void move_left()
 {
   if(1 == map[(snake_head)->_x][(snake_head)->_y - 1])
   {
-    printf("碰到墙了\n");
+    printf("碰到墙了\n\033[?25h");
     exit(1);
   }
   else if(3 == map[(snake_head)->_x][(snake_head)->_y - 1])
@@ -251,7 +265,7 @@ void move_left()
   }
   else if(2 == map[(snake_head)->_x][(snake_head)->_y - 1])
   {
-    printf("吃自己了\n");
+    printf("吃自己了\n\033[?25h");
     exit(1);
   }
   else
@@ -284,6 +298,7 @@ void move_left()
 void snake_move()
 {
 
+  pthread_mutex_lock(&mutex);
   switch(status)
   {
     case U:move_up();
@@ -298,6 +313,8 @@ void snake_move()
       exit(0);
       break;
   }
+  pthread_mutex_unlock(&mutex);
+  pthread_cond_signal(&cond);
 }
 
 void create_food()
@@ -337,7 +354,7 @@ void print()
 {
   int row = 0;
   int col = 0;
-  printf("\033[2J");
+  printf("\033[?25l");
   printf("\033[0;0H");
   for(row = 0; row < ROW; ++row)
   {
@@ -346,18 +363,18 @@ void print()
       if(map[row][col] == 0)
         printf(" ");
       else if(map[row][col] == 1)
-        printf("#");
+        printf("\033[43;43m \033[0m");
       else if(map[row][col] == 3)
-        printf("*");
+        printf("\033[41;41m \033[0m");
       else
-        printf("*");
+        printf("\033[47;47m \033[0m");
 
 
     }
     printf("\n");
   }
 
-  printf("w:up a:left s:down d:right Author: AHOAHA\n");
+  printf("w:up a:left s:down d:right  Author: AHAOAHA  Game: Snake_eat_food\n");
 }
 
 void init_border()
@@ -376,13 +393,53 @@ void init_border()
   }
 }
 
+void ChooseLevel()
+{
+  int level;
+  char str[] = "Game begin, please choose level:\n 0: easy\n 1: middle\n 2: hard\n";
+  size_t i = 0;
+  while(str[i] != '\0')
+  {
+    printf("%c", str[i]);
+    fflush(stdout);
+    usleep(30000);
+    i++;
+  }
+  while(1)
+  {
+    scanf("%d", &level);
+    switch(level)
+    {
+      case 0:Level = 100000;
+             return;
+      case 1:Level = 80000;
+             return;
+      case 2:Level = 50000;
+             return;
+      default:printf("bad choose!\n");
+             break;
+    }
+  }
+}
 
 int game()
 {
+  int count = 3;
   pthread_mutex_init(&mutex, NULL);
   pthread_cond_init(&cond, NULL);
   init_border();//初始化游戏边框
   snake_head = create_snake();//创建蛇身
+
+  ChooseLevel();
+  print();
+  while(count)
+  {
+    printf("start in %d seconds ...\r", count);
+    fflush(stdout);
+    count--;
+    usleep(800000);
+  }
+  printf("\033[2J");
   create_food();
   control_snake();
   while(1);
