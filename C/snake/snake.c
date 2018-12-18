@@ -1,3 +1,10 @@
+/*************************************************************************
+*File Name: snake.c
+*Author: AHAOAHA
+*mail: ahaoaha_@outlook.com
+*Created Time: Tue 18 Dec 2018 10:51:11 AM CST
+ ************************************************************************/
+
 #include"./snake.h"
 
 struct snake_node* snake_head;

@@ -9,6 +9,7 @@
 void PrintMap(int array[ROW][COL]);//打印函数
 int Game(int array[ROW][COL]);//游戏主体函数
 int IsDown(int array[ROW][COL]);//判断游戏是否失败
+int IsFull(int array[ROW][COL]);
 void Seed(int array[ROW][COL]);//播撒种子
 void MoveMap(int array[ROW][COL]);//移动游戏元素
 void MovePointW(int array[ROW][COL]);

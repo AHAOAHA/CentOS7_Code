@@ -1,3 +1,10 @@
+/*************************************************************************
+*File Name: snake.h
+*Author: AHAOAHA
+*mail: ahaoaha_@outlook.com
+*Created Time: Tue 18 Dec 2018 10:52:11 AM CST
+ ************************************************************************/
+
 #pragma once
 #include<stdio.h>
 #include<stdlib.h>

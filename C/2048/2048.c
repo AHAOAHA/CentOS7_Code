@@ -33,8 +33,6 @@ void PrintMap(int array[ROW][COL])
 {
 	int i = 0;
 	int j = 0;
-	printf("\n");
-  printf("\033[2J");
   printf("\033[0;0H");
 	for (i = 0; i < ROW; ++i)
 	{
@@ -60,8 +58,9 @@ void PrintMap(int array[ROW][COL])
 	printf("---------------------\n");
 }
 
-//判断是否失败 返回0表示未失败 返回1表示失败
-int IsDown(int array[ROW][COL])
+//判断是否满
+
+int IsFull(int array[ROW][COL])
 {
 	int i = 0;
 	int j = 0;
@@ -76,6 +75,48 @@ int IsDown(int array[ROW][COL])
 		}
 	}
 	return 1;
+
+}
+//判断是否失败 返回0表示未失败 返回1表示失败
+int IsDown(int array[ROW][COL])
+{
+
+  int row = 0;
+  int col = 0;
+  if(!IsFull(array))
+  {
+    return 0;
+  }
+
+  int first;
+  int second;
+  //检测数据周围是否有可以合并的数字
+  for(row = 0; row < ROW; ++row)
+  {
+    for(col = 0; col < COL - 1; ++col)
+    {
+      first = array[row][col];
+      second = array[row][col + 1];
+      if(first == second)
+      {
+        return 0;
+      }
+    }
+  }
+  for(col = 0; col < COL; ++col)
+  {
+    for(row = 0; row < ROW - 1; ++row)
+    {
+      first = array[row][col];
+      second = array[row + 1][col];
+      if(first == second)
+      {
+        return 0;
+      }
+    }
+  }
+
+  return 1;
 }
 
 //播种
@@ -557,6 +598,7 @@ int Game(int array[ROW][COL])
   Proc();
 	printf("游戏开始！\n");
   usleep(500000);
+  printf("\033[2J");
 	while (!IsDown(array))
 	{
 		if (1 == Flag_Seed)
@@ -567,5 +609,6 @@ int Game(int array[ROW][COL])
 		PrintMap(array);
 		MoveMap(array);
 	}
+  printf("\033[?25h");
 	return 0;
 }
