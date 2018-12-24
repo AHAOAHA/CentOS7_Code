@@ -10,12 +10,11 @@
 int main()
 {
   int fd;
-  char buf[32] = "hello";
-  fd = open("/dev/pts/0", O_WRONLY);
-  int ret;
+  char buf[32] = "hello\n";
+  fd = open("/dev/pts/1", O_WRONLY);
   while(1)
   {
-    ret = write(fd, buf, sizeof(buf));
+    write(fd, buf, sizeof(buf));
     sleep(1);
     //printf("%d\n", ret);
   }

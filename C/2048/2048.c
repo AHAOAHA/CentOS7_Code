@@ -596,7 +596,6 @@ void IsSeedD(int array[ROW][COL])
 int Game(int array[ROW][COL])
 {
   Proc();
-	printf("游戏开始！\n");
   usleep(500000);
   printf("\033[2J");
 	while (!IsDown(array))
