@@ -4518,14 +4518,7 @@ extern char *stpncpy (char *__restrict __dest,
 # 10 "test.c" 2
 int main()
 {
-  int fd;
-  char buf[32] = "hello\n";
-  fd = open("/dev/pts/1", 01);
-  while(1)
-  {
-    write(fd, buf, sizeof(buf));
-    sleep(1);
-
-  }
+  char buf[22];
+  fgets(buf, 21, stdin);
   return 0;
 }

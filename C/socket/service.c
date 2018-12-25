@@ -11,14 +11,42 @@
 #include<arpa/inet.h>
 #include<unistd.h>
 #include<string.h>
+#include<netinet/in.h>
+#include<pthread.h>
+
+
+char buf[1024];
+char sendbuf[1024];
+void* recFunc(void *arg)
+{
+  int clientfd = *(int*)arg;
+  int recvret;
+  while(1)
+  {
+    memset(buf, '\0', sizeof(buf));
+    recvret = recv(clientfd, buf, sizeof(buf) - 1, 0);
+    if(recvret == -1)
+    {
+      perror("recv error ... \n");
+      exit(EXIT_FAILURE);
+    }
+    if(recvret == 0)
+    {
+      printf("client is down\n");
+      pthread_exit(NULL);
+    }
+
+    printf("client: %s", buf);
+  }
+
+  return NULL;
+}
 
 int main()
 {
-  int n;
-  char buf[1024];
-  char addr_p[INET_ADDRSTRLEN];
   struct sockaddr_in cin;
   socklen_t len;
+
   //创建套接字
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if(-1 == sockfd)
@@ -31,9 +59,9 @@ int main()
   struct sockaddr_in s_add;
   bzero(&s_add, sizeof(s_add));
   s_add.sin_family = AF_INET;
-  s_add.sin_addr.s_addr = htonl(INADDR_ANY);
+  s_add.sin_addr.s_addr = inet_addr("0.0.0.0");
 
-  s_add.sin_port = htons(0x8080);
+  s_add.sin_port = htons(8000);
 
   int ret = bind(sockfd, (struct sockaddr*)&s_add, sizeof(struct sockaddr));
   if(-1 == ret)
@@ -60,43 +88,18 @@ int main()
       exit(EXIT_FAILURE);
     }
     printf("connect success ...\n");
-    while(1);
-    int recv_ret = recv(sockfd, buf, 1024, 0);
-    if(-1 == recv_ret)
+    while(1)
     {
-      perror("recv error ...");
-      exit(EXIT_FAILURE);
-    }
-    else if(0 == recv_ret)
-    {
-      printf("the connect has been closed ...\n");
-      close(sockfd);
-      continue;
-    }
-    
-    /*
-    //将客户端地址转换为字符串
-    inet_ntop(AF_INET, &cin.sin_addr, addr_p, sizeof(addr_p));
-    printf("client addr is %s ... port is %s ...\n", addr_p, ntohs(cin.sin_port));
-    printf("connect is %s ...\n", buf);
-    n = strlen(buf);
-    sprintf(buf, "%d", n);
+      pthread_t recthread;
+      pthread_create(&recthread, NULL, recFunc, &accept_ret);
+      pthread_detach(recthread);
 
-    n = send(sockfd, buf, sizeof(buf) + 1, 0);
-    if(-1 == n)
-    {
-      perror("send error ...");
-      exit(EXIT_FAILURE);
+
+      //向客户端发送消息
+      
     }
-    
-    n = close(sockfd);
-    if(-1 == n)
-    {
-      perror("close error ...");
-      exit(EXIT_FAILURE);
-    }
-    */
-    close(sockfd);
   }
+    
+    
   return 0;
 }

@@ -25,27 +25,24 @@ int main()
 
   bzero(&c_add, sizeof(c_add));
   c_add.sin_family = AF_INET;
-  c_add.sin_port = htons(0x8080);
-
-  int ret = inet_pton(sockfd, "39.108.94.7", &c_add.sin_addr.s_addr);
+  c_add.sin_port = htons(8000);
+  c_add.sin_addr.s_addr = inet_addr("39.108.94.7");
   //if(-1 == ret)
   //{
   //  perror("inet_pton error ...");
   //  close(sockfd);
   //  exit(EXIT_FAILURE);
   //}
+  printf("wait ...\n");
   int con_ret = connect(sockfd, (struct sockaddr*)&c_add, sizeof(c_add));
   if(-1 == con_ret)
   {
     perror("connect error ...");
-    close(sockfd);
     exit(EXIT_FAILURE);
   }
 
-  while(1)
-  {
+  close(sockfd);
 
-  }
 
   return 0;
 }
