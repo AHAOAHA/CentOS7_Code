@@ -3,72 +3,83 @@
 *Author: AHAOAHA
 *mail: ahaoaha_@outlook.com
 *Created Time: Tue 25 Dec 2018 02:50:32 PM CST
- ************************************************************************/
-#include <stdio.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <unistd.h>
+*************************************************************************/
+#include "service.h"
+#include "http.h"
 
-int main()
+void* ClientRequest(void* arg)
+{
+  int clsockfd = *(int*)arg;
+  return (void*)handle(clsockfd);//调用请求处理方法
+}
+
+int setUp()
 {
   //创建套接字
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if(sockfd == -1)
+  if(-1 == sockfd)
   {
-    perror("socket error ...\n");
-    exit(-1);
+    perror("socket fail ...\n");
+    exit(EXIT_FAILURE);
   }
+  
+  int opt = 1;
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
-  //定义sockaddr_in结构体
-  struct sockaddr_in sockaddr;
-  bzero(&sockaddr, sizeof(sockaddr));
-  sockaddr.sin_family = AF_INET;
-  sockaddr.sin_port = htons(0x8080);
-  sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  //设置本地sockaddr结构体
+  struct sockaddr_in local;
+  local.sin_family = AF_INET;
+  local.sin_port = htons(8080);
+  local.sin_addr.s_addr = inet_addr("0.0.0.0");
 
-  //绑定sockfd和sockaddr_in
-  int bindret = bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr));
-  if(bindret == -1)
+  //将套接字和local绑定
+  int bindRet = bind(sockfd, (struct sockaddr*)&local, sizeof(local));
+  if(bindRet < 0)
   {
-    perror("bind error ...\n");
-    exit(-1);
+    perror("bind fail ...\n");
+    exit(EXIT_FAILURE);
   }
 
   //开始监听
-  int listenret = listen(sockfd, 5);
-  if(listenret == -1)
+  
+  int listenRet = listen(sockfd, 5);
+  if(listenRet < 0)
   {
-    perror("listen error ...\n");
-    exit(-1);
+    perror("listen fail ...\n");
+    exit(EXIT_FAILURE);
   }
 
-  //保存客户端信息
-  struct sockaddr_in clientaddr;
-  char buf[1024];
-  socklen_t lenth = sizeof(clientaddr);
+  return sockfd;
+}
 
-  //开始处理请求
+
+
+int main()
+{
+  //服务器初始化
+  int sockfd = setUp();
+
+  printf("service running ...\n");
+  //处理请求
   while(1)
   {
-    int clientfd = accept(sockfd, (struct sockaddr*)&clientaddr, &lenth);
-    if(0 > clientfd)
+    struct sockaddr_in client;//保存客户端的sockaddr结构体
+    socklen_t len = sizeof(client);
+
+    int clsockfd = accept(sockfd, (struct sockaddr*)&client, &len);
+    
+    if(clsockfd < 0)
     {
-      perror("accept error ...\n");
-      exit(-1);
+      perror("accept fail ...\n");
+      continue;
     }
-    printf("connected\n");
 
-    memset(buf, 0, sizeof(buf));
-
-    int len = recv(clientfd, buf, sizeof(buf), 0);
-    fputs(buf, stdout);
-
-    //http_send(clientfd, "hello world!\n");
-    close(clientfd);
+    //创建线程处理请求
+    pthread_t id;
+    pthread_create(&id, NULL, ClientRequest, (void*)&clsockfd);
+    pthread_detach(id);//分离线程
   }
+
 
   return 0;
 }

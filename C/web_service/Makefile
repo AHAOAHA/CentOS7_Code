@@ -1,4 +1,4 @@
-service:service.c
+service:service.c http.c
 	gcc $^ -o $@ -g -lpthread
 .PHONY:clean
 clean:
