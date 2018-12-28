@@ -19,4 +19,5 @@
 #define SIZE 4096
 
 int setUp();
-
+char* GetTime();
+void PrintLog(const char *logstr);

@@ -5,6 +5,7 @@
 *Created Time: Tue Dec 25 23:18:55 2018
  ************************************************************************/
 #include "http.h"
+#include "service.h"
 
 int GetLine(int clsockfd, char *buf, int len)
 {
@@ -17,7 +18,7 @@ int GetLine(int clsockfd, char *buf, int len)
     {
       if(ch == '\r')
       {
-        if(recv(clsockfd, &ch, 1, MSG_PEEK) > 0 && ch == '\n')
+        if(recv(clsockfd, &ch, 1, MSG_PEEK) > 0 && ch == '\n')//MSG_PEEK:不改变读取指针式读取
           recv(clsockfd, &ch, 1, 0);
         else
           ch = '\n';
@@ -25,6 +26,7 @@ int GetLine(int clsockfd, char *buf, int len)
       buf[i++] = ch;
     }
   }
+  buf[i] = '\0';
   return i;
 }
 
@@ -36,16 +38,18 @@ int handle(int clsockfd)
   int i = 0;
   int j = 0;
   int ret;
-  int cgi = 0;
   char* query_string = NULL;
   char path[SIZE];
+  
 
-  if(GetLine(clsockfd, buf, sizeof(buf)) <= 0)
+  if(GetLine(clsockfd, buf, sizeof(buf)) <= 0)//这里仅读取浏览器请求的第一行
   {
-    perror("GetLine error ...\n");
+    PrintLog("GetLine error");
+    ret = 1;
     goto end;
   }
 
+  
   //GET /XX/YY/ZZ HTTP/1.0
   //提取方法:遇到空格，则之前读取到的字符就是方法
   while((i < (sizeof(buf) - 1)) && (j < (sizeof(method) - 1)) && (buf[j] != ' '))
@@ -58,16 +62,14 @@ int handle(int clsockfd)
   //都不为0时则退出
   if(strcasecmp(method, "GET") && strcasecmp(method, "POST"))
   {
-    perror("GET || POST fail ...\n");
+    PrintLog("request method fail");
+    ret = 2;
     goto end;
   }
 
-  //POST需要支持cgi模式
-  if(strcasecmp(method, "POST") == 0)
-  {
-    cgi = 1;
-  }
 
+
+  //此时buf[i] = ' '->GET后面的空格
   //过滤空格，使i指向资源有效路径
   while(i < sizeof(buf) && buf[i] == ' ')
     ++i;
@@ -82,12 +84,13 @@ int handle(int clsockfd)
 
   url[j] = '\0';
 
-  //GET方法:提取参数给query_string
+  //GET方法:提取参数给query_string:提取出/XX/YY/ZZ
   if(strcasecmp(method, "GET") == 0)
   {
     //处理方法
     query_string = url;
 
+    //让query_string指向?处,?后面即就是参数
     while(*query_string != '\0' && *query_string != '?')
     {
       query_string++;
@@ -99,7 +102,6 @@ int handle(int clsockfd)
     {
       *query_string = '\0';
       query_string++;
-      cgi = 1;
     }
   }
 
@@ -112,40 +114,29 @@ int handle(int clsockfd)
 
   //检测资源是否存在
   struct stat st;
-  if(stat(path, &st) < 0)
+  if(stat(path, &st) == -1)
   {
-    //请求资源页面不存在
-    perror("index fail ...\n");
+    //请求资源页面不存在,此处该返回404页面
+    ClearHeader(clsockfd);//将socket中的内容全部读取掉
+    ShowError(clsockfd, 404);
+    PrintLog(path);
+    ret = 3;
     goto end;
   }
   else
   {
-    //先判断是不是一个普通文件
-    if(S_ISREG(st.st_mode))
-    {
-      if(st.st_mode & S_IXUSR || st.st_mode & S_IXGRP || st.st_mode & S_IXOTH)//是一个可执行程序
-        cgi = 1;
-    }
-    else if(S_ISDIR(st.st_mode))//是一个目录文件
+    if(S_ISDIR(st.st_mode))//是一个目录文件
     {
       strcat(path, "/index.html");
     }
-    else
+    else//普通文件
     {
 
     }
   }
 
-  //处理cgi模式&非cgi模式
-  if(cgi == 1)
-  {
-    //处理cgi
-  }
-  else
-  {
-    ret = ClearHeader(clsockfd);
-    ret = ShowWWW(clsockfd, path, st.st_size);
-  }
+  ret = ClearHeader(clsockfd);//将socket中的内容全部读取掉
+  ret = ShowWWW(clsockfd, path, st.st_size);
 
 end:
   close(clsockfd);
@@ -162,6 +153,7 @@ int ClearHeader(int clsockfd)
   { 
     ret = GetLine(clsockfd, line, SIZE);
   }while(ret != 1 && strcmp(line, "\n") != 0);
+
   return ret;
 }
 
@@ -172,8 +164,7 @@ int ShowWWW(int clsockfd, char *path, ssize_t size)
   int fd = open(path, O_RDONLY);//打开目标文件
   if(fd < 0)
   {
-    perror("open fail ...\n");
-    ShowError(clsockfd, 503);
+    PrintLog("open file fail");
     ret = 8;
     goto end;
   }
@@ -186,6 +177,7 @@ int ShowWWW(int clsockfd, char *path, ssize_t size)
   send(clsockfd, "\r\n", 2, 0);
   if(sendfile(clsockfd, fd, NULL, size) < 0)
   {
+    PrintLog("send file fail");
     ShowError(clsockfd, 503);
     ret = 9;
     goto end;

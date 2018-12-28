@@ -2,9 +2,9 @@
 all:client service
 cc:g++
 client:client.cc
-	$(cc) $^ -o $@
+	$(cc) $^ -o $@ -lpthread
 client:service.cc
-	$(cc) $^ -o $@
+	$(cc) $^ -o $@ -lpthread
 
 .PHONY:clean
 clean:
