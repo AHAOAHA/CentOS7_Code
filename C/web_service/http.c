@@ -60,7 +60,7 @@ int handle(int clsockfd)
 
   //strcasecmp:忽略大小写比较字符串
   //都不为0时则退出
-  if(strcasecmp(method, "GET") && strcasecmp(method, "POST"))
+  if(strcasecmp(method, "GET"))
   {
     PrintLog("request method fail");
     ret = 2;
