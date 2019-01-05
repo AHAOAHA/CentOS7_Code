@@ -14,12 +14,15 @@ void Usage()
 }
 void Handler(std::string& req, std::string& resp)
 {
-  auto it = dict.find(req);
-  if(it == dict.end())
+  for(auto it = dict.begin(); it != dict.end(); ++it)
   {
-    resp = "null";
+    if(it->first == req)
+    {
+      resp = it->second;
+      return;
+    }
   }
-  resp = it->second;
+  resp = "null";
 }
 
 int main(int argc, char* argv[])

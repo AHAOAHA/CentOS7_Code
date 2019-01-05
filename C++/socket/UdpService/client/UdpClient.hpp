@@ -31,6 +31,10 @@ class Sock
         std::cerr << "socket fail" << std::endl;
         exit(EXIT_FAILURE);
       }
+      bzero(&saddr, sizeof(saddr));
+      saddr.sin_family = AF_INET;
+      saddr.sin_port = htons(_port);
+      saddr.sin_addr.s_addr = inet_addr(_ip);
     }
     ~Sock()
     {
@@ -38,20 +42,14 @@ class Sock
     }
     ssize_t SendTo(std::string& req)
     {
-      struct sockaddr_in saddr;
-      bzero(&saddr, sizeof(saddr));
-      saddr.sin_family = AF_INET;
-      saddr.sin_port = htons(_port);
-      saddr.sin_addr.s_addr = inet_addr(_ip);
       return sendto(_sock, req.c_str(), req.size(), 0, (struct sockaddr*)&saddr, sizeof(saddr));
     
     }
 
     ssize_t RecvFrom(char* buf, size_t size)
     {
-      struct sockaddr_in caddr;
-      socklen_t len;
-      return recvfrom(_sock, buf, size, 0, (struct sockaddr*)&caddr, &len);
+      socklen_t len = sizeof(saddr);
+      return recvfrom(_sock, buf, size, 0, (struct sockaddr*)&saddr, &len);
     }
 
 
@@ -59,4 +57,5 @@ class Sock
     int _sock;
     char* _ip;
     int16_t _port;
+    struct sockaddr_in saddr;
 };

@@ -54,12 +54,16 @@ class Sock
       int ret;
       char buf[1024];
       struct sockaddr_in caddr;
-      socklen_t len;
+      socklen_t len = sizeof(caddr);
       InitService();
+      std::string req;
+      std::string resp;
 
       //进入事件循环
       for(;;)
       {
+        req.resize(0);
+        resp.resize(0);
         bzero(&caddr, sizeof(caddr));
         memset(buf, '\0', sizeof(buf));
         ret = recvfrom(_sock, buf, sizeof(buf) - 1, 0, (struct sockaddr*)&caddr, &len);
@@ -69,13 +73,12 @@ class Sock
           continue;
         }
 
-        std::string req(buf);
-        std::string resp;
-
+        req = buf;
         Handler(req, resp);
 
         sendto(_sock, resp.c_str(), resp.size(), 0, (struct sockaddr*)&caddr, sizeof(caddr));
       }
+
 
       close(_sock);
     }

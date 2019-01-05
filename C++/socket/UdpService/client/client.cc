@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
     exit(EXIT_FAILURE);
   }
   Sock sock(argv[1], atoi(argv[2]));
+  sock.InitSock();
 
 
   char buf[1024];
@@ -22,8 +23,12 @@ int main(int argc, char* argv[])
   while(1)
   {
     req.reserve(0);
-    std::cout << "client: ";
+    std::cout << "client<exit即退出>: ";
     std::cin >> req;
+    if(strcmp("exit", req.c_str()) == 0)
+    {
+      break;
+    }
     ret = sock.SendTo(req);
     if(ret < 0)
     {
@@ -41,6 +46,7 @@ int main(int argc, char* argv[])
     std::cout << "service echo:"<< buf << std::endl;
     
   }
+  
   
   return 0;
 }
