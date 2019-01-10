@@ -11,21 +11,20 @@
 #include <iostream>
 #include <string.h>
 #include <stdlib.h>
-
-void Usage()
-{
-  std::cout << "./service [ip] [port]" << std::endl;
-}
-
+#include <unistd.h>
+#include "Task.hpp"
+#include "PthreadPool.hpp"
 //创建套接字类
 class Sock
 {
   public:
-    Sock():_sock(-1)
-    {}
+    Sock():_sock(-1), _pl(1)
+    {
+      _pl.PthreadPoolInit();
+    }
 
     //初始化套接字：将套接字与ip及端口进行绑定
-    void InitSock(const char* ip, int16_t port)
+    void InitSock(int port)
     {
       int ret;
       _sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -48,7 +47,7 @@ class Sock
       bzero(&saddr, sizeof(saddr));
       saddr.sin_family = AF_INET;
       saddr.sin_port = htons(port);
-      saddr.sin_addr.s_addr = inet_addr(ip);
+      saddr.sin_addr.s_addr = inet_addr("0.0.0.0");
 
       //绑定套接字与本地服务器
       ret = bind(_sock, (struct sockaddr*)&saddr, sizeof(saddr));
@@ -67,7 +66,7 @@ class Sock
       }
     }
 
-    void Run()
+    void Run(Handler_t handler)
     {
       int client;
       struct sockaddr_in caddr;
@@ -82,16 +81,14 @@ class Sock
           std::cerr << "accept fail" << std::endl;
           continue;
         }
-        
-        //处理客户端请求，此处该接入线程池
-        pthread_t id;
-        pthread_create(&id, NULL, NULL, NULL);
+        Task t(client, handler);
+        _pl.AddTask(t);
       }
     }
-
 
     ~Sock()
     {}
   private:
     int _sock;
+    PthreadPool _pl;
 };
