@@ -1,10 +1,11 @@
 /*************************************************************************
-*File Name: work1.c
+*File Name: work3.c
 *Author: AHAOAHA
 *mail: ahaoaha_@outlook.com
-*Created Time: Tue 25 Dec 2018 01:16:58 PM CST
+*Created Time: 2019年01月13日 星期日 21时17分58秒
  ************************************************************************/
-//返回参数中数字的二进制形式中1的个数
+
+//返回参数中数字的二进制形式
 #include <stdio.h>
 #include <stdlib.h>
 void swap(char *a, char *b)
@@ -53,7 +54,7 @@ void showBit(int val)
     printf("%c", buf[i]);
   }
   printf("\n");
-  printf("count: %d\n", count);
+  //printf("count: %d\n", count);
 }
 
 int Count1(int val)
@@ -80,8 +81,8 @@ int main(int argc, char *argv[])
   int val;
   val = atoi(argv[1]);
 
-  //showBit(val);
-  printf("Count1: %d\n", Count1(val));
+  showBit(val);
+  //printf("Count1: %d\n", Count1(val));
 
   return 0;
 }

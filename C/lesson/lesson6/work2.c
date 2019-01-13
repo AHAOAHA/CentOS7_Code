@@ -12,39 +12,35 @@ void saveBit(char *buf, char *bufJ, char *bufO, int val)
   int i = 0;
   for(i =0; i < 32; ++i)
   {
-    if((val & (1 << i)) == 0 && i % 2 == 0)
+    if((val & (1 << i)) == 0)
     {
       buf[31 - i] = '0';
-      if(i % 2 == 0 || i == 0)
-      {
-        bufO[15 - i] = '0';
-      }
-      else
-      {
-        bufJ[15 - i] = '0';
-      }
-      
     }
     else
     {
       buf[31 - i] = '1';
-      if(i % 2 == 0 || i == 0)
-      {
-        bufO[15 - i] = '1';
-      }
-      else
-      {
-        bufJ[15 - i] = '1';
-      }
-
     }
+  }
+
+  size_t j = 0;
+  for(i = 0; i < 32; i+=2)
+  {
+    bufO[j] = buf[i];
+    ++j;
+  }
+
+  j=0;
+  for(i = 1; i < 32; i+=2)
+  {
+    bufJ[j] = buf[i];
+    ++j;
   }
 }
 
 int main()
 {
   int val;
-  char buf[32];
+  char buf[33] = {'\0'};
   char bufJ[17] = {'\0'};
   char bufO[17] = {'\0'};
   printf("val:");
