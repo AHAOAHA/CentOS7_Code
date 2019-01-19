@@ -55,6 +55,12 @@ class Auto_Ptr
     {
       ptr._ptr = nullptr;
     }
+    //赋值运算符
+    Auto_Ptr& operator=(Auto_Ptr& ptr)
+    {
+      this->_ptr = ptr._ptr;
+      ptr._ptr = nullptr;
+    }
 
     //像指针一样使用
     T& operator*()
