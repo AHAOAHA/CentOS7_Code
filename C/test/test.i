@@ -2513,7 +2513,7 @@ typedef union
     short __spins;
     short __elision;
     __pthread_list_t __list;
-# 124 "/usr/include/bits/pthreadtypes.h" 3 4
+# 125 "/usr/include/bits/pthreadtypes.h" 3 4
   } __data;
   char __size[40];
   long int __align;
@@ -2583,7 +2583,7 @@ typedef union
     unsigned int __flags;
 
   } __data;
-# 211 "/usr/include/bits/pthreadtypes.h" 3 4
+# 212 "/usr/include/bits/pthreadtypes.h" 3 4
   char __size[56];
   long int __align;
 } pthread_rwlock_t;
@@ -3439,7 +3439,7 @@ enum
   PTHREAD_PRIO_INHERIT,
   PTHREAD_PRIO_PROTECT
 };
-# 125 "/usr/include/pthread.h" 3 4
+# 116 "/usr/include/pthread.h" 3 4
 enum
 {
   PTHREAD_RWLOCK_PREFER_READER_NP,
@@ -3447,7 +3447,7 @@ enum
   PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
 };
-# 166 "/usr/include/pthread.h" 3 4
+# 157 "/usr/include/pthread.h" 3 4
 enum
 {
   PTHREAD_INHERIT_SCHED,
@@ -3475,7 +3475,7 @@ enum
   PTHREAD_PROCESS_SHARED
 
 };
-# 201 "/usr/include/pthread.h" 3 4
+# 192 "/usr/include/pthread.h" 3 4
 struct _pthread_cleanup_buffer
 {
   void (*__routine) (void *);
@@ -3499,7 +3499,7 @@ enum
   PTHREAD_CANCEL_ASYNCHRONOUS
 
 };
-# 239 "/usr/include/pthread.h" 3 4
+# 230 "/usr/include/pthread.h" 3 4
 
 
 
@@ -3523,7 +3523,7 @@ extern void pthread_exit (void *__retval) __attribute__ ((__noreturn__));
 
 
 extern int pthread_join (pthread_t __th, void **__thread_return);
-# 282 "/usr/include/pthread.h" 3 4
+# 273 "/usr/include/pthread.h" 3 4
 extern int pthread_detach (pthread_t __th) __attribute__ ((__nothrow__ , __leaf__));
 
 
@@ -3644,7 +3644,7 @@ extern int pthread_attr_getstack (const pthread_attr_t *__restrict __attr,
 
 extern int pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
       size_t __stacksize) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
-# 432 "/usr/include/pthread.h" 3 4
+# 423 "/usr/include/pthread.h" 3 4
 extern int pthread_setschedparam (pthread_t __target_thread, int __policy,
       const struct sched_param *__param)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (3)));
@@ -3658,10 +3658,10 @@ extern int pthread_getschedparam (pthread_t __target_thread,
 
 extern int pthread_setschedprio (pthread_t __target_thread, int __prio)
      __attribute__ ((__nothrow__ , __leaf__));
-# 497 "/usr/include/pthread.h" 3 4
+# 488 "/usr/include/pthread.h" 3 4
 extern int pthread_once (pthread_once_t *__once_control,
     void (*__init_routine) (void)) __attribute__ ((__nonnull__ (1, 2)));
-# 509 "/usr/include/pthread.h" 3 4
+# 500 "/usr/include/pthread.h" 3 4
 extern int pthread_setcancelstate (int __state, int *__oldstate);
 
 
@@ -3688,7 +3688,7 @@ typedef struct
   } __cancel_jmp_buf[1];
   void *__pad[4];
 } __pthread_unwind_buf_t __attribute__ ((__aligned__));
-# 543 "/usr/include/pthread.h" 3 4
+# 534 "/usr/include/pthread.h" 3 4
 struct __pthread_cleanup_frame
 {
   void (*__cancel_routine) (void *);
@@ -3696,13 +3696,13 @@ struct __pthread_cleanup_frame
   int __do_it;
   int __cancel_type;
 };
-# 683 "/usr/include/pthread.h" 3 4
+# 674 "/usr/include/pthread.h" 3 4
 extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
      ;
-# 695 "/usr/include/pthread.h" 3 4
+# 686 "/usr/include/pthread.h" 3 4
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
   ;
-# 736 "/usr/include/pthread.h" 3 4
+# 727 "/usr/include/pthread.h" 3 4
 extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
      __attribute__ ((__noreturn__))
 
@@ -3765,7 +3765,7 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 
 extern int pthread_mutex_consistent (pthread_mutex_t *__mutex)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
-# 809 "/usr/include/pthread.h" 3 4
+# 800 "/usr/include/pthread.h" 3 4
 extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
 
@@ -3835,7 +3835,7 @@ extern int pthread_mutexattr_getrobust (const pthread_mutexattr_t *__attr,
 extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
      int __robustness)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
-# 891 "/usr/include/pthread.h" 3 4
+# 882 "/usr/include/pthread.h" 3 4
 extern int pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
     const pthread_rwlockattr_t *__restrict
     __attr) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
@@ -3940,7 +3940,7 @@ extern int pthread_cond_broadcast (pthread_cond_t *__cond)
 extern int pthread_cond_wait (pthread_cond_t *__restrict __cond,
          pthread_mutex_t *__restrict __mutex)
      __attribute__ ((__nonnull__ (1, 2)));
-# 1003 "/usr/include/pthread.h" 3 4
+# 994 "/usr/include/pthread.h" 3 4
 extern int pthread_cond_timedwait (pthread_cond_t *__restrict __cond,
        pthread_mutex_t *__restrict __mutex,
        const struct timespec *__restrict __abstime)
@@ -3977,7 +3977,7 @@ extern int pthread_condattr_getclock (const pthread_condattr_t *
 extern int pthread_condattr_setclock (pthread_condattr_t *__attr,
           __clockid_t __clock_id)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
-# 1047 "/usr/include/pthread.h" 3 4
+# 1038 "/usr/include/pthread.h" 3 4
 extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
 
@@ -4034,7 +4034,7 @@ extern int pthread_barrierattr_getpshared (const pthread_barrierattr_t *
 extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
         int __pshared)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
-# 1114 "/usr/include/pthread.h" 3 4
+# 1105 "/usr/include/pthread.h" 3 4
 extern int pthread_key_create (pthread_key_t *__key,
           void (*__destr_function) (void *))
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
@@ -4055,11 +4055,11 @@ extern int pthread_setspecific (pthread_key_t __key,
 extern int pthread_getcpuclockid (pthread_t __thread_id,
       __clockid_t *__clock_id)
      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2)));
-# 1148 "/usr/include/pthread.h" 3 4
+# 1139 "/usr/include/pthread.h" 3 4
 extern int pthread_atfork (void (*__prepare) (void),
       void (*__parent) (void),
       void (*__child) (void)) __attribute__ ((__nothrow__ , __leaf__));
-# 1162 "/usr/include/pthread.h" 3 4
+# 1153 "/usr/include/pthread.h" 3 4
 
 # 5 "test.c" 2
 
@@ -4257,9 +4257,9 @@ struct flock
   };
 # 61 "/usr/include/bits/fcntl.h" 3 4
 # 1 "/usr/include/bits/fcntl-linux.h" 1 3 4
-# 315 "/usr/include/bits/fcntl-linux.h" 3 4
+# 339 "/usr/include/bits/fcntl-linux.h" 3 4
 
-# 389 "/usr/include/bits/fcntl-linux.h" 3 4
+# 413 "/usr/include/bits/fcntl-linux.h" 3 4
 
 # 61 "/usr/include/bits/fcntl.h" 2 3 4
 # 36 "/usr/include/fcntl.h" 2 3 4
@@ -4518,7 +4518,6 @@ extern char *stpncpy (char *__restrict __dest,
 # 10 "test.c" 2
 int main()
 {
-  char buf[22];
-  fgets(buf, 21, stdin);
+  printf("\a");
   return 0;
 }

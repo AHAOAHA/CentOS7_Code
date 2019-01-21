@@ -9,7 +9,6 @@
 #include<string.h>
 int main()
 {
-  char buf[22];
-  fgets(buf, 21, stdin);
+  printf("\a");
   return 0;
 }
