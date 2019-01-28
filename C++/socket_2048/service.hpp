@@ -46,15 +46,20 @@ class Sock
       }
     }
 
-    int Accept()
+    int Accept(struct sockaddr* saddr, socklen_t* len)
     {
-      socklen_t len = sizeof(saddr);
-      int ret = accept(_sock, (struct sockaddr*)&saddr, &len);
-      if(ret < 0)
-      {
-        std::cerr << "accept fail!" << std::endl;
-      }
-      return ret;
+      return accept(_sock, saddr, len);
+    }
+
+
+    ssize_t Send(int s, const void* buf, size_t size)
+    {
+      return send(s, buf, size, 0);
+    }
+
+    ssize_t Recv(int sockfd, void* buf, size_t size)
+    {
+      return recv(sockfd, buf, size, 0);
     }
 
     ~Sock()
