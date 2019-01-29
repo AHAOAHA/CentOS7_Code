@@ -6,6 +6,7 @@
  ************************************************************************/
 #include "service.hpp"
 #include <pthread.h>
+#include "2048.h"
 
 
 //保护传递的clientsock
@@ -13,9 +14,24 @@ pthread_mutex_t lock;
 
 void* handler(void* arg)
 {
+  //分离线程并获得sockfd
+  pthread_detach(pthread_self());
   int clientfd = *(int*)arg;
   pthread_mutex_unlock(&lock);
+
+
+  //向客户端发送链接成功消息
+  const char* buf = "connect success!\n";
+  int ret = send(clientfd, buf, strlen(buf), 0);
+  if(ret < 0)
+  {
+    std::cerr << "send fail!" << std::endl;
+    goto end;
+  }
+
   std::cout << clientfd << std::endl;
+end:
+  close(clientfd);
   return nullptr;
 }
 
