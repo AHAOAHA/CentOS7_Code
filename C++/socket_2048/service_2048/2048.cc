@@ -148,7 +148,7 @@ void Seed(int array[ROW][COL])
 }
 
 //移动地图
-void MoveMap(int array[ROW][COL])
+void MoveMap(int array[ROW][COL], char ch)
 {
 	char point = '0';
 	if (IsDown(array))
@@ -158,9 +158,9 @@ void MoveMap(int array[ROW][COL])
 	}
 	printf("w:up s:down a:left d:right\nq:quit\n");
   //设置不输入回车直接读取字符
-  system("stty raw");
-	point = getchar();
-  system("stty -raw");
+  //system("stty raw");
+	point = ch;
+  //system("stty -raw");
 	switch(point)
 	{
 	case 'w':IsSeedW(array);
@@ -499,7 +499,6 @@ void MovePointD(int array[ROW][COL])
 }
 
 //判断是否需要生成种子
-int Flag_Seed = 1;//设置全局变量作为是否生成种子的标记
 void IsSeedW(int array[ROW][COL])
 {
 	int flag_first_0 = 0;//标记是否找到第一个0
@@ -593,21 +592,42 @@ void IsSeedD(int array[ROW][COL])
 	}
 }
 //////////////////////////游戏主体函数
-int Game(int array[ROW][COL])
+//int Game(int array[ROW][COL])
+//{
+//  Proc();
+//  usleep(500000);
+//  printf("\033[2J");
+//	while (!IsDown(array))
+//	{
+//		if (1 == Flag_Seed)
+//		{
+//			Seed(array);
+//			Flag_Seed = 0;
+//		}
+//		PrintMap(array);
+//		MoveMap(array);
+//	}
+//  printf("\033[?25h");
+//	return 0;
+//}
+int Game(int array[ROW][COL], Task* pt)
 {
-  Proc();
-  usleep(500000);
-  printf("\033[2J");
-	while (!IsDown(array))
-	{
-		if (1 == Flag_Seed)
-		{
-			Seed(array);
-			Flag_Seed = 0;
-		}
-		PrintMap(array);
-		MoveMap(array);
-	}
-  printf("\033[?25h");
-	return 0;
+  char ch;
+  while(!IsDown(array))
+  {
+    //播种
+    if(1 == Flag_Seed)
+    {
+      Seed(array);
+      Flag_Seed = 0;
+    }
+
+    //将游戏地图通过sock传递给客户端
+    pt->Send(array, ROW*COL*sizeof(int));
+
+    //接受客户端穿回来的数据
+    pt->Recv(&ch, 1);
+
+    MoveMap(array, ch);
+  }
 }

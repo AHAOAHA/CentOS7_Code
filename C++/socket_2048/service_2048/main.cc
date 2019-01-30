@@ -7,56 +7,47 @@
 #include "service.hpp"
 #include <pthread.h>
 #include "2048.h"
+#include "game.h"
 
+int array[ROW][COL] = {0};
 
-//保护传递的clientsock
-pthread_mutex_t lock;
-
-void* handler(void* arg)
+int Flag_Seed = 1;
+void* handle(void* arg)
 {
-  //分离线程并获得sockfd
   pthread_detach(pthread_self());
-  int clientfd = *(int*)arg;
-  pthread_mutex_unlock(&lock);
+  Task* pt = (Task*)arg;
+  std::cout << "get a clientfd "<< pt->GetClientfd() << std::endl;
+  
+  //todo游戏主体
+  SuccessConnect(pt);
 
+  Game(array, pt);
 
-  //向客户端发送链接成功消息
-  const char* buf = "connect success!\n";
-  int ret = send(clientfd, buf, strlen(buf), 0);
-  if(ret < 0)
-  {
-    std::cerr << "send fail!" << std::endl;
-    goto end;
-  }
-
-  std::cout << clientfd << std::endl;
-end:
-  close(clientfd);
+  delete pt;
   return nullptr;
 }
 
-
-
-int main()
+void Usage()
 {
-  static int clientfd = -1;
+  std::cout << "./service [port]" << std::endl;
+}
 
-  pthread_mutex_init(&lock, nullptr);
+int main(int argc, char* argv[])
+{
+  if(argc < 2)
+  {
+    Usage();
+    exit(EXIT_FAILURE);
+  }
+
+
 
   Sock service;
-  service.SockInit(8080);
-  struct sockaddr_in caddr;
-  bzero((struct sockaddr*)&caddr, sizeof(caddr));
-  socklen_t len = sizeof(caddr);
+  service.SockInit(atoi(argv[1]));
+  std::cout << "service running ..." << std::endl;
 
   //服务启动
-  while(1)
-  {
-    clientfd = service.Accept((struct sockaddr*)&caddr, &len);
-    pthread_t id;
-    pthread_mutex_lock(&lock);
-    pthread_create(&id, nullptr, handler, (void*)&clientfd);
-  }
+  service.Run(handle);
     
   return 0;
 }

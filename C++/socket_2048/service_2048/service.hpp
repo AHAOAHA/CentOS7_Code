@@ -10,6 +10,43 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <string.h>
+#include <unistd.h>
+
+typedef void* (*handle_t)(void*);
+
+class Task
+{
+  public:
+    Task(int clientfd):_clientfd(clientfd)
+    {}
+    ~Task()
+    {
+      close(_clientfd);
+    }
+
+    //发送信息
+    ssize_t Send(void* buf, size_t size)
+    {
+      return send(_clientfd, buf, size, 0);
+    }
+
+    //接受消息
+    ssize_t Recv(void* buf, size_t size)
+    {
+      return recv(_clientfd, buf, size, 0);
+    }
+
+    int GetClientfd()
+    {
+      return _clientfd;
+    }
+
+  private:
+    int _clientfd;
+};
+
+
+
 
 class Sock
 {
@@ -26,12 +63,12 @@ class Sock
         exit(EXIT_FAILURE);
       }
 
-      bzero(&saddr, sizeof(saddr));
-      saddr.sin_family = AF_INET;
-      saddr.sin_port = htons(port);
-      saddr.sin_addr.s_addr = INADDR_ANY;
+      bzero(&_saddr, sizeof(_saddr));
+      _saddr.sin_family = AF_INET;
+      _saddr.sin_port = htons(port);
+      _saddr.sin_addr.s_addr = inet_addr("0.0.0.0");
 
-      int ret = bind(_sock, (struct sockaddr*)&saddr, sizeof(saddr));
+      int ret = bind(_sock, (struct sockaddr*)&_saddr, sizeof(_saddr));
       if(ret < 0)
       {
         std::cerr << "bind fail!" << std::endl;
@@ -46,25 +83,26 @@ class Sock
       }
     }
 
-    int Accept(struct sockaddr* saddr, socklen_t* len)
+    void Run(handle_t handle)
     {
-      return accept(_sock, saddr, len);
+      while(1)
+      {
+        struct sockaddr_in caddr;
+        socklen_t len;
+        int clientfd = accept(_sock, (struct sockaddr*)&caddr, &len);
+
+
+        Task* pt = new Task(clientfd);
+        pthread_t id;
+        pthread_create(&id, nullptr, handle, (void*)pt);
+      }
     }
 
 
-    ssize_t Send(int s, const void* buf, size_t size)
-    {
-      return send(s, buf, size, 0);
-    }
-
-    ssize_t Recv(int sockfd, void* buf, size_t size)
-    {
-      return recv(sockfd, buf, size, 0);
-    }
 
     ~Sock()
     {}
   private:
     int _sock;
-    struct sockaddr_in saddr;
+    struct sockaddr_in _saddr;
 };
