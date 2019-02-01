@@ -12,6 +12,7 @@ void Usage()
 }
 
 int array[ROW][COL] = {'\0'};
+int Flag_Seed = 1;
 int main(int argc, char* argv[])
 {
   if(argc < 3)
@@ -34,6 +35,9 @@ int main(int argc, char* argv[])
   client.Recv(buf, sizeof(buf)-1);
   std::cout << buf << std::endl;
 
+  //游戏开始页面
+  
+
   char ch;
   while(!IsDown(array))
   {
@@ -47,9 +51,14 @@ int main(int argc, char* argv[])
 	  ch = getchar();
     system("stty -raw");
 
+
     //发送方向字符
     client.Send(&ch, 1);
 
+
+    //检测退出字符q
+    if('q' == ch)
+      break;
   
   }
 
