@@ -1,4 +1,4 @@
-socket_2048_service:main.cc 2048.cc game.cc
+socket_2048_service:main.cc 2048.cc
 	g++ $^ -o $@ -std=c++11 -lpthread
 .PHONY:clean
 clean:

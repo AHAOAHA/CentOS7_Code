@@ -7,11 +7,8 @@
 #include "service.hpp"
 #include <pthread.h>
 #include "2048.h"
-#include "game.h"
 
-int array[ROW][COL] = {0};
 
-int Flag_Seed = 1;
 void* handle(void* arg)
 {
   pthread_detach(pthread_self());
@@ -19,9 +16,7 @@ void* handle(void* arg)
   std::cout << "get a clientfd "<< pt->GetClientfd() << std::endl;
   
   //todo游戏主体
-  SuccessConnect(pt);
-
-  Game(array, pt);
+  Game(pt);
 
   delete pt;
   return nullptr;

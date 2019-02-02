@@ -56,10 +56,21 @@ class Sock
     
     void SockInit(uint16_t port)
     {
+      int ret = 0;
       _sock = socket(AF_INET, SOCK_STREAM, 0);
       if(_sock  < 0)
       {
         std::cerr << "socket fail!" << std::endl; 
+        exit(EXIT_FAILURE);
+      }
+
+
+      //设置服务器立即重启
+      int opt = 1;
+      ret = setsockopt(_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+      if(ret  < 0)
+      {
+        std::cerr << "setsockopt fail!" << std::endl;
         exit(EXIT_FAILURE);
       }
 
@@ -68,7 +79,7 @@ class Sock
       _saddr.sin_port = htons(port);
       _saddr.sin_addr.s_addr = inet_addr("0.0.0.0");
 
-      int ret = bind(_sock, (struct sockaddr*)&_saddr, sizeof(_saddr));
+      ret = bind(_sock, (struct sockaddr*)&_saddr, sizeof(_saddr));
       if(ret < 0)
       {
         std::cerr << "bind fail!" << std::endl;

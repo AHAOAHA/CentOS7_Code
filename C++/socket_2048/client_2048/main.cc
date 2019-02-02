@@ -11,8 +11,8 @@ void Usage()
   std::cout << "./client [ip] [port]" << std::endl;
 }
 
-int array[ROW][COL] = {'\0'};
-int Flag_Seed = 1;
+int array[ROW][COL] = {0};
+
 int main(int argc, char* argv[])
 {
   if(argc < 3)
@@ -29,11 +29,17 @@ int main(int argc, char* argv[])
     exit(EXIT_FAILURE);
   }
 
+  //清屏
   printf("\033[2J");
-  char buf[64] = {'\0'};
+  //定位光标
+  printf("\033[0;0H");
+
+  std::cout << "Connect Success!" << std::endl;
+  sleep(3);
+  //char buf[64] = {'\0'};
   //接受连接成功的消息
-  client.Recv(buf, sizeof(buf)-1);
-  std::cout << buf << std::endl;
+  //client.Recv(buf, sizeof(buf)-1);
+  //std::cout << buf << std::endl;
 
   //游戏开始页面
   
@@ -46,6 +52,9 @@ int main(int argc, char* argv[])
 
 
     PrintMap(array);
+
+    //打印二维数组
+    PrintArr(array);
 
     system("stty raw");
 	  ch = getchar();
