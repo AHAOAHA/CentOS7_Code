@@ -11,48 +11,21 @@
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
+#include "2048.h"
+
+#include "PthreadPool.hpp"
+#include "Task.hpp"
 
 typedef void* (*handle_t)(void*);
-
-class Task
-{
-  public:
-    Task(int clientfd):_clientfd(clientfd)
-    {}
-    ~Task()
-    {
-      close(_clientfd);
-    }
-
-    //发送信息
-    ssize_t Send(void* buf, size_t size)
-    {
-      return send(_clientfd, buf, size, 0);
-    }
-
-    //接受消息
-    ssize_t Recv(void* buf, size_t size)
-    {
-      return recv(_clientfd, buf, size, 0);
-    }
-
-    int GetClientfd()
-    {
-      return _clientfd;
-    }
-
-  private:
-    int _clientfd;
-};
-
-
-
 
 class Sock
 {
   public:
-    Sock():_sock(-1)
-    {}
+    Sock():_sock(-1), _pl(1)
+    {
+      //初始化线程池
+      _pl.PthreadInit();
+    }
     
     void SockInit(uint16_t port)
     {
@@ -94,7 +67,7 @@ class Sock
       }
     }
 
-    void Run(handle_t handle)
+    void Run()
     {
       while(1)
       {
@@ -103,9 +76,8 @@ class Sock
         int clientfd = accept(_sock, (struct sockaddr*)&caddr, &len);
 
 
-        Task* pt = new Task(clientfd);
-        pthread_t id;
-        pthread_create(&id, nullptr, handle, (void*)pt);
+        Task t(clientfd);
+        _pl.AddTask(t);
       }
     }
 
@@ -116,4 +88,5 @@ class Sock
   private:
     int _sock;
     struct sockaddr_in _saddr;
+    PthreadPool _pl;
 };

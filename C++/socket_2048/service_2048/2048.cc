@@ -143,7 +143,7 @@ void Seed(int array[ROW][COL])
 }
 
 //移动地图
-void MoveMap(int array[ROW][COL], char ch, int& Flag_Seed)
+int MoveMap(int array[ROW][COL], char ch, int& Flag_Seed)
 {
 	char point = '0';
 	printf("w:up s:down a:left d:right\nq:quit\n");
@@ -166,10 +166,12 @@ void MoveMap(int array[ROW][COL], char ch, int& Flag_Seed)
 		MovePointD(array, Flag_Seed);
 		break;
   case 'q':
-    pthread_exit(nullptr);
+    return 1;
+    //pthread_exit(nullptr);
 	default:printf("非法输入！\n");
 		break;
 	}
+  return 0;
 }
 
 struct POS
@@ -613,30 +615,5 @@ void PrintArr(int array[ROW][COL])
     std::cout << std::endl;
   }
 }
-int Game(Task* pt)
-{
-  char ch;
-  int Flag_Seed = 1;
-  int array[ROW][COL] = {0};
-  while(!IsDown(array))
-  {
-    //播种
-    if(1 == Flag_Seed)
-    {
-      Seed(array);
-      Flag_Seed = 0;
-    }
 
-    PrintArr(array);
-
-    //将游戏地图通过sock传递给客户端
-    pt->Send(array, ROW*COL*sizeof(int));
-
-    //接受客户端穿回来的数据
-    pt->Recv(&ch, 1);
-
-    MoveMap(array, ch, Flag_Seed);
-  }
-  return 0;
-}
 
