@@ -14,7 +14,7 @@ struct test{
 int main()
 {
   test* ptr = (test*)malloc(sizeof(test));
-  Auto_Ptr<test, MallocDeleter<test> >  auto_ptr(ptr);
+  Auto_Ptr<test>  auto_ptr(ptr);
   auto_ptr->a = 1;
   return 0;
 }

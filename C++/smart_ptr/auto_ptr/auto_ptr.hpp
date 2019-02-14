@@ -76,8 +76,9 @@ class Auto_Ptr
     //
     ~Auto_Ptr()
     {
+      Deleter del;
       std::cout << "Deleter: ";
-      Deleter()(_ptr);
+      del(_ptr);
     }
   private:
     T* _ptr;

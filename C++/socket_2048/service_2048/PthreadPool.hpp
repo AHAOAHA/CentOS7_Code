@@ -59,7 +59,7 @@ class PthreadPool
       pthread_cond_init(&_cond, nullptr);
 
       pthread_t id;
-      int i = 0;
+      size_t i = 0;
       //此处创建线程
       for(i = 0; i < _num; ++i)
       {

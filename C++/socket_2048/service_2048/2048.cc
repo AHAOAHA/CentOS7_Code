@@ -146,7 +146,7 @@ void Seed(int array[ROW][COL])
 int MoveMap(int array[ROW][COL], char ch, int& Flag_Seed)
 {
 	char point = '0';
-	printf("w:up s:down a:left d:right\nq:quit\n");
+	//printf("w:up s:down a:left d:right\nq:quit\n");
   //设置不输入回车直接读取字符
   //system("stty raw");
 	point = ch;
@@ -168,7 +168,7 @@ int MoveMap(int array[ROW][COL], char ch, int& Flag_Seed)
   case 'q':
     return 1;
     //pthread_exit(nullptr);
-	default:printf("非法输入！\n");
+	default://printf("非法输入！\n");
 		break;
 	}
   return 0;

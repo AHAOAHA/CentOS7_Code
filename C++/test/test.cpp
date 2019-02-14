@@ -5,13 +5,15 @@
 #include<unistd.h>
 using namespace std;
 
-static int sum = 10;
+struct A
+{
+  short a;
+  long int b;
+  char c;
+};
+
 int main()
 {
-  while(1)
-  {
-    cout << sum <<endl;
-    sleep(1);
-  }
+  printf("%d\n", (int)sizeof(A));
   return 0;
 }

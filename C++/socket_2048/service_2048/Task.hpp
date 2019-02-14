@@ -29,7 +29,7 @@ class Task
           Flag_Seed = 0;
         }
 
-        PrintArr(array);
+        //PrintArr(array);
 
         //将游戏地图通过sock传递给客户端
         Send(array, ROW*COL*sizeof(int));
