@@ -11,6 +11,8 @@
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include "2048.h"
 
 #include "PthreadPool.hpp"
@@ -69,11 +71,21 @@ class Sock
 
     void Run()
     {
+      int fd;
       while(1)
       {
         struct sockaddr_in caddr;
         socklen_t len;
         int clientfd = accept(_sock, (struct sockaddr*)&caddr, &len);
+        
+        umask(0);
+        fd = open("log_ip.txt", O_CREAT|O_APPEND|O_WRONLY, 0644);
+
+
+        std::string client_ip(inet_ntoa(((struct sockaddr_in)caddr).sin_addr));
+
+        write(fd, client_ip.c_str(), client_ip.size());
+        close(fd);
 
 
         Task t(clientfd);
