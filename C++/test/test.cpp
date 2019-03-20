@@ -1,19 +1,15 @@
-#include<typeinfo>
-#include<string>
-#include<iostream>
-#include<map>
-#include<unistd.h>
-using namespace std;
+#include <iostream>
+using std::cout;
+using std::endl;
 
-struct A
-{
-  short a;
-  long int b;
-  char c;
+struct Test{
+  int b;
+  char a;
 };
-
 int main()
 {
-  printf("%d\n", (int)sizeof(A));
+  Test t;
+  t.a = 'a';
+  cout << sizeof(t) << endl;
   return 0;
 }
