@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
     for(;;) {
         int num = select(max_sock + 1, &readfds, &writefds, NULL, NULL);
         if(num < 0) {
-            //select出错直接返回
-            break;
+            //fd_set清0 当readfds清0时 表示发生错误 TODO
+            continue;
         }
         else if(num == 0) {
             //重新设置需要监听的文件描述符
@@ -53,29 +53,39 @@ int main(int argc, char *argv[]) {
                 if(FD_ISSET(fd_read[i], &readfds)) {
                     //读事件发生
                     if(fd_read[i] == sock) { //套接字读事件
+                        cout << "SOCKET CONNECT ..." << endl;
                         struct sockaddr_in caddr;
                         socklen_t len = sizeof(caddr);
                         int clientfd = accept(fd_read[i], (struct sockaddr*)&caddr, &len);
-                        fd_read.push_back(clientfd);
+                        AHAOAHA::AddFdToVec(fd_read, max_sock, clientfd);
                         continue;
                     }
                     else { //读事件发生在客户端套接字
+                        cout << "HTTP REQFD : " << i << endl;
+                        cout << "HTTP REQUEST ..." << endl;
                         char buffer[BUFSIZE] = {0};
                         int ret = recv(fd_read[i], buffer, BUFSIZE - 1, 0);
                         if(ret == 0) { //对端关闭链接
                             close(fd_read[i]);
-                            fd_read.erase(fd_read.begin()+i);
+                            AHAOAHA::DelFdInVec(fd_read, max_sock, i);
+                            //fd_read.erase(fd_read.begin()+i);
                             continue;
                         }
                         else if(ret < 0) { //发生错误
                             close(fd_read[i]);
-                            fd_read.erase(fd_read.begin()+i);
+                            AHAOAHA::DelFdInVec(fd_read, max_sock, i);
+                            //fd_read.erase(fd_read.begin()+i);
                             continue;
                         }
                         else { //正常接收
                             buffer[ret] = 0;
+                            cout << buffer << endl;
+                            AHAOAHA::DelFdInVec(fd_read, max_sock, i);
+                            //fd_read.erase(fd_read.begin()+i);
+                            AHAOAHA::AddFdToVec(fd_write, max_sock, fd_read[i]);
+                            //fd_write.push_back(fd_read[i]);
+                            continue;
                         }
-                        cout << buffer << endl;
                     }
                 } //读事件处理完毕
             }
@@ -87,19 +97,13 @@ int main(int argc, char *argv[]) {
                 if(FD_ISSET(fd_write[i], &writefds)) {
                     //写事件发生
                     std::string resp = "HTTP/1.1 200 OK\r\n\r\n<html><body><h1>hello select!</h1></body></html>\r\n";
-                    int ret = write(fd_write[i], resp.c_str(), resp.size());
-                    if(ret < 0) { //写入出现错误
-                        close(fd_write[i]);
-                        fd_write.erase(fd_write.begin() + i);
-                        continue;
-                    }
-                    else {
-                        //NOTHING TODO
-                    }
+                    write(fd_write[i], resp.c_str(), resp.size());  //无论写入正常与否 都是要关闭连接的
+                    close(fd_write[i]);
+                    AHAOAHA::DelFdInVec(fd_write, max_sock, i);
                 }
             }
+            AHAOAHA::SetSet(fd_write, writefds);
         }
-        AHAOAHA::SetSet(fd_write, writefds);
     }
     for(auto e : fd_read) {
         close(e);

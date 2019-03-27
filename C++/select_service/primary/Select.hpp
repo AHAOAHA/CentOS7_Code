@@ -12,6 +12,10 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 namespace AHAOAHA {
     void AddFdToVec(std::vector<int>& v, int &max_sock, const int &sock) {
@@ -21,6 +25,16 @@ namespace AHAOAHA {
                 max_sock = e;
             }
         }
+    }
+
+    void DelFdInVec(std::vector<int>& v, int &max_sock, const int &pos) {
+        cout << "DELFD : " << pos << endl;
+       v.erase(v.begin()+pos);
+       for(const auto& e : v) {
+           if(e > max_sock) {
+               max_sock = e;
+           }
+       }
     }
 
     void SetSet(std::vector<int>& v, fd_set &set) {
