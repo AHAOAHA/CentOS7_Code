@@ -1,0 +1,2 @@
+/usr/bin/ar qc librw_mutex.a  CMakeFiles/rw_mutex.dir/rw_mutex.cpp.o
+/usr/bin/ranlib librw_mutex.a

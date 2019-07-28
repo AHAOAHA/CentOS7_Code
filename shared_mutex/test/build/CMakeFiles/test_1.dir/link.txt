@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/test_1.dir/test.cpp.o  -o test_1  -L/home/ahaoozhang/dev_code/c++/shared_mutex/test -Wl,-rpath,/home/ahaoozhang/dev_code/c++/shared_mutex/test -lrw_mutex 

@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ahaoozhang/dev_code/c++/shared_mutex/src/rw_mutex.cpp
+rw_mutex.h
+/home/ahaoozhang/dev_code/c++/shared_mutex/src/rw_mutex.h
+
+/home/ahaoozhang/dev_code/c++/shared_mutex/src/rw_mutex.h
+mutex
+-
+atomic
+-
+unistd.h
+-
+
