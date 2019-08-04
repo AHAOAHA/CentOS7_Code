@@ -14,14 +14,9 @@
 #include <unistd.h>
 
 namespace AHAOAHA {
-    class rw_mutex {
-        enum {
-            IS_READ,
-            IS_WRITE
-        };
-
+    class rw_mutex{
         public:
-            rw_mutex():_r_count(0), _status(IS_READ) {
+            rw_mutex():_r_count(0), _is_write(false) {
                 _r_count = 0;
             }
             ~rw_mutex() {}
@@ -34,8 +29,8 @@ namespace AHAOAHA {
 
         private:
             std::mutex _mtx;    //lock
-            std::atomic<int> _status;
-            std::atomic<uint64_t> _r_count;
+            std::atomic<bool> _is_write;   //
+            std::atomic<uint64_t> _r_count; //原子性的计数
     };
 }
 

@@ -3,3 +3,5 @@ project(rw_mutex VERSION 0.1.0)
 
 # 生成静态库
 add_library(rw_mutex rw_mutex.cpp)
+
+add_compile_options(-std=c++11 -lpthread)

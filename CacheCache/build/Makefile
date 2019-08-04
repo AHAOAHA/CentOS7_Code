@@ -133,44 +133,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named CacheCache
+# Target rules for targets named cachecache
 
 # Build rule for target.
-CacheCache: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 CacheCache
-.PHONY : CacheCache
+cachecache: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cachecache
+.PHONY : cachecache
 
 # fast build rule for target.
-CacheCache/fast:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/build
-.PHONY : CacheCache/fast
-
-CacheCache.o: CacheCache.cpp.o
-
-.PHONY : CacheCache.o
-
-# target to build an object file
-CacheCache.cpp.o:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/CacheCache.cpp.o
-.PHONY : CacheCache.cpp.o
-
-CacheCache.i: CacheCache.cpp.i
-
-.PHONY : CacheCache.i
-
-# target to preprocess a source file
-CacheCache.cpp.i:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/CacheCache.cpp.i
-.PHONY : CacheCache.cpp.i
-
-CacheCache.s: CacheCache.cpp.s
-
-.PHONY : CacheCache.s
-
-# target to generate assembly for a file
-CacheCache.cpp.s:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/CacheCache.cpp.s
-.PHONY : CacheCache.cpp.s
+cachecache/fast:
+	$(MAKE) -f CMakeFiles/cachecache.dir/build.make CMakeFiles/cachecache.dir/build
+.PHONY : cachecache/fast
 
 # Help Target
 help:
@@ -180,12 +153,9 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... CacheCache"
+	@echo "... cachecache"
 	@echo "... package_source"
 	@echo "... package"
-	@echo "... CacheCache.o"
-	@echo "... CacheCache.i"
-	@echo "... CacheCache.s"
 .PHONY : help
 
 

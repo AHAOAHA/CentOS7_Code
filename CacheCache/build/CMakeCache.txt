@@ -315,6 +315,9 @@ SVNCOMMAND:FILEPATH=SVNCOMMAND-NOTFOUND
 //The directory containing a CMake configuration file for boost_thread.
 boost_thread_DIR:PATH=boost_thread_DIR-NOTFOUND
 
+//Dependencies for target
+cachecache_LIB_DEPENDS:STATIC=
+
 //The directory containing a CMake configuration file for shared_mutex.
 shared_mutex_DIR:PATH=shared_mutex_DIR-NOTFOUND
 

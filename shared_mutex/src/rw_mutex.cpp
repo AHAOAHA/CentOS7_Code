@@ -9,17 +9,14 @@
 #include "rw_mutex.h"
 
 bool AHAOAHA::rw_mutex::r_lock() {
-    int i = IS_READ;
-    while (!_status.compare_exchange_strong(i, IS_READ)) {
+    bool is_write = false;
+    while (!_is_write.compare_exchange_strong(is_write, true)) {
         //当前资源正在写入
-        printf("waiting...");
-        usleep(10);
+        //printf("waiting...\n");
+        is_write = false;
     }
-
     //原子操作
     _r_count++;
-    _status = IS_READ;
-
     return true;
 }
 
@@ -33,16 +30,17 @@ uint32_t AHAOAHA::rw_mutex::get_r_count() {
 }
 
 bool AHAOAHA::rw_mutex::w_lock() {
-    _status = IS_WRITE; //现将状态改为读状态
-
-    while(_r_count == 0) {
-    }
-
+    _is_write.store(true);
+    //等待读者完成 cas
+    uint64_t zero_r = 0;
+    while(!_r_count.compare_exchange_strong(zero_r, zero_r)) {
+        usleep(1);
+    } 
     _mtx.lock();
     return true;
 }
 
 bool AHAOAHA::rw_mutex::w_unlock() {
     _mtx.unlock();
-    _status = IS_READ;
+    _is_write.store(false);
 }

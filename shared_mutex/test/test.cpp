@@ -3,45 +3,53 @@
  * 
  * Filename: test.cpp
  * Author: ahaoozhang
- * Date: 2019-07-28 19:33:35 (星期日)
+ * Date: 2019-08-04 20:21:22 (星期日)
  * Describe: 
  *************************************************/
-#include <pthread.h>
 #include "rw_mutex.h"
-#include <iostream>
 #include <unistd.h>
-int i = 0;
+#include <pthread.h>
 
-void* read(void* arg) {
-    AHAOAHA::rw_mutex* rw_mtx = (AHAOAHA::rw_mutex*)arg;
-    while (1) {
-        sleep(3);
-        rw_mtx->r_lock();
-        std::cout << "i = " << i << std::endl;
-        rw_mtx->r_unlock();
-    }
-    return NULL;
+
+int num = 0;
+AHAOAHA::rw_mutex rw_mtx;
+
+
+void read() {
+    rw_mtx.r_lock();
+    printf("num = %d\n", num);
+    rw_mtx.r_unlock();
 }
 
-void* write(void* arg) {
-    AHAOAHA::rw_mutex* rw_mtx = (AHAOAHA::rw_mutex*)arg;
+void write() {
+    rw_mtx.w_lock();
+    sleep(1);
+    num++;
+    rw_mtx.w_unlock();
+}
+
+void* read_handle(void* arg) {
     while(1) {
-        sleep(1);
-        rw_mtx->w_lock();
-        std::cout << "now r: " << rw_mtx->get_r_count() << std::endl;
-        i = i++;
-        rw_mtx->w_unlock();
+        read();
     }
-    return NULL;
+    return arg;
+}
+
+void* write_handle(void* arg) {
+    while(1) {
+        write();
+    }
+    return arg;
 }
 
 int main() {
-    AHAOAHA::rw_mutex rw_mtx;
-    pthread_t t1,t2;
-    pthread_create(&t1, NULL, read, (void*)&rw_mtx);
-    pthread_create(&t2, NULL, write, (void*)&rw_mtx);
-    pthread_detach(t1);
-    pthread_detach(t2);
-    while(1);
+    pthread_t p1;
+    pthread_t p2;
+    
+    pthread_create(&p2, NULL, write_handle, NULL);
+    sleep(1);
+    pthread_create(&p1, NULL, read_handle, NULL);
+
+    while(1);   //主线程不退出
     return 0;
 }

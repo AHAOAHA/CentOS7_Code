@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/ahaoozhang/dev_code/c++/CacheCache/src
 CMAKE_BINARY_DIR = /home/ahaoozhang/dev_code/c++/CacheCache/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/CacheCache.dir
+# Target rules for target CMakeFiles/cachecache.dir
 
 # All Build rule for target.
-CMakeFiles/CacheCache.dir/all:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/depend
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles --progress-num=1,2 "Built target CacheCache"
-.PHONY : CMakeFiles/CacheCache.dir/all
+CMakeFiles/cachecache.dir/all:
+	$(MAKE) -f CMakeFiles/cachecache.dir/build.make CMakeFiles/cachecache.dir/depend
+	$(MAKE) -f CMakeFiles/cachecache.dir/build.make CMakeFiles/cachecache.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles --progress-num= "Built target cachecache"
+.PHONY : CMakeFiles/cachecache.dir/all
 
 # Include target in all.
-all: CMakeFiles/CacheCache.dir/all
+all: CMakeFiles/cachecache.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/CacheCache.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/CacheCache.dir/all
+CMakeFiles/cachecache.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles 0
-.PHONY : CMakeFiles/CacheCache.dir/rule
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cachecache.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles 0
+.PHONY : CMakeFiles/cachecache.dir/rule
 
 # Convenience name for target.
-CacheCache: CMakeFiles/CacheCache.dir/rule
+cachecache: CMakeFiles/cachecache.dir/rule
 
-.PHONY : CacheCache
-
-# clean rule for target.
-CMakeFiles/CacheCache.dir/clean:
-	$(MAKE) -f CMakeFiles/CacheCache.dir/build.make CMakeFiles/CacheCache.dir/clean
-.PHONY : CMakeFiles/CacheCache.dir/clean
+.PHONY : cachecache
 
 # clean rule for target.
-clean: CMakeFiles/CacheCache.dir/clean
+CMakeFiles/cachecache.dir/clean:
+	$(MAKE) -f CMakeFiles/cachecache.dir/build.make CMakeFiles/cachecache.dir/clean
+.PHONY : CMakeFiles/cachecache.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/cachecache.dir/clean
 
 .PHONY : clean
 

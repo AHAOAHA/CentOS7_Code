@@ -1,5 +1,5 @@
 /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/rebuild_cache.dir
 /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/edit_cache.dir
-/home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/CacheCache.dir
+/home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/cachecache.dir
 /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/package_source.dir
 /home/ahaoozhang/dev_code/c++/CacheCache/build/CMakeFiles/package.dir
