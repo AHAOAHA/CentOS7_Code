@@ -32,9 +32,10 @@ uint32_t AHAOAHA::rw_mutex::get_r_count() {
 bool AHAOAHA::rw_mutex::w_lock() {
     _is_write.store(true);
     //等待读者完成 cas
-    uint64_t zero_r = 0;
-    while(!_r_count.compare_exchange_strong(zero_r, zero_r)) {
+    uint64_t r_count = 0;
+    while(!_r_count.compare_exchange_strong(r_count, r_count)) {
         usleep(1);
+        r_count = 0;
     } 
     _mtx.lock();
     return true;

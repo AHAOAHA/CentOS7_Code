@@ -18,6 +18,7 @@ AHAOAHA::rw_mutex rw_mtx;
 void read() {
     rw_mtx.r_lock();
     printf("num = %d\n", num);
+    sleep(10);
     rw_mtx.r_unlock();
 }
 
