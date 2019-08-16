@@ -11,7 +11,7 @@
 namespace AHAOAHA {
     //err log文件命名：xxxx-xx-xx.SsockErr
     bool Logger::Init() {
-        InitTime(); //设置第二天0点时间戳
+        SetSecondDayTime(); //设置第二天0点时间戳
 
         //初始化当天日志文件名
         time_t curr = time(NULL);
@@ -21,97 +21,64 @@ namespace AHAOAHA {
         _lfn = tmp;
         _lfp = _lph + _lfn;
 
-        //初始化当天日志文件句柄
         umask(0);
-        if(access(_lfp.c_str(), F_OK) < 0) {
-            //create log file
-            _lfd = open(_lfp.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0660);
-            if (_lfd < 0) {
-                return false;
-            }
-        } else {
-            _lfd = open(_lfp.c_str(), O_WRONLY | O_APPEND);
-            if (_lfd < 0) {
-                return false;
-            }
+        //create Log file, only write
+        _lff = fopen(_lfp.c_str(), "a");
+        if (_lff == nullptr) {
+            return false;
         }
+        
         return true;
     }
 
-    size_t Logger::LogInfo(const char* fmt, ...) {
+    int Logger::LogInfo(const char* fmt, ...) {
+        if(FlushLogFile() == false) {
+            return false;
+        }
+
+        int ret = 0;
         std::string fmt_str("[INFO]");
         fmt_str += fmt;
         va_list args;
         va_start(args, fmt);
-        size_t count = LogOutput(fmt, args);
+        ret = vfprintf(_lff, fmt_str.c_str(), args);
         va_end(args);
-        return count;
+        return ret;
     }
 
-    size_t Logger::LogError(const char* fmt, ...) {
+    int Logger::LogError(const char* fmt, ...) {
+        if(FlushLogFile() == false) {
+            return false;
+        }
+
+        int ret = 0;
         std::string fmt_str("[ERROR]");
         fmt_str += fmt;
         va_list args;
         va_start(args, fmt);
-        printf("fmt: %s\n", fmt_str.c_str());
-        size_t count = LogOutput(fmt, args);
+        ret = vfprintf(_lff, fmt_str.c_str(), args);
         va_end(args);
-        return count;
-
+        return ret;
     }
 
-
-    size_t Logger::LogOutput(const char* fmt, ...) {
-        std::string buff;
-
-        int tmp = 0;
-        va_list arg;    //记录可变参数
-
-        char* p_fmt = nullptr;  //作为fmt 标记
-
-        std::string tmp_str;
-        int tmp_num;
-        char tmp_ch;
-        
-        va_start(arg, fmt);
-        for(p_fmt = const_cast<char*>(fmt); *(p_fmt) != '\0';) {
-            switch(*p_fmt) {
-                case '%':
-                    p_fmt++;
-                    switch (*p_fmt) {
-                        case 'c':
-                            tmp_ch = va_arg(arg, char);
-                            buff += tmp_ch;
-                            p_fmt++;
-                            break;
-                        case 'd':
-                            tmp_num = va_arg(arg, int);
-                            buff += std::to_string(tmp_num);
-                            p_fmt++;
-                            break;
-                        case 's':
-                            tmp_str = va_arg(arg, char*);
-                            buff += tmp_str;
-                            p_fmt++;
-                            break;
-                        default:
-                            buff += '%';
-                            buff += *p_fmt;
-                            p_fmt++;
-                            break;
-                    }
-                    break;
-                default:
-                    buff += *p_fmt;
-                    p_fmt++;
-                    break;
-            }
+    /*
+     * Output函数打印一条日志，一定打印在当天的日志文件中
+     */
+    int Logger::Output(const char* fmt, ...) {
+        if(FlushLogFile() == false) {
+            return false;
         }
 
-        buff += '\n';
-        //buff ready
-        write(_lfd, buff.c_str(), buff.size());
-        return buff.length();
+        std::string currtm = GetCurrTime();
+        std::string fmt_str;
+        fmt_str = '[' + currtm + ']' + ' '+ fmt;
+
+        int ret = 0;
+        va_list args;
+        va_start(args, fmt);
+        ret = vfprintf(_lff, fmt_str.c_str(), args);
+        va_end(args);
+        return ret;
     }
 
     //private ===================================================>
@@ -120,6 +87,13 @@ namespace AHAOAHA {
     bool Logger::FdIsExpr() {
         time_t curr = time(NULL);
         return curr < _tv;
+    }
+
+    std::string Logger::GetCurrTime() {
+        time_t curr = time(NULL);
+        char tmp[255] = {0};
+        strftime(tmp, sizeof(tmp), "%Y/%m/%d %H:%M:%S", localtime(&curr));
+        return std::string(tmp);
     }
 
     bool Logger::FlushLogFile() {
@@ -132,20 +106,12 @@ namespace AHAOAHA {
             _lfn = tmp;
             _lfp = _lph + _lfn;
 
-            if(access(_lfp.c_str(), F_OK) < 0) {
-            //create log file
-            _lfd = open(_lfp.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0660);
-            if (_lfd < 0) {
+            fclose(_lff);
+
+            _lff = fopen(_lfp.c_str(), "a");
+            if (_lff == nullptr) {
                 return false;
             }
-        } 
-        
-        else {
-            _lfd = open(_lfp.c_str(), O_WRONLY | O_APPEND);
-            if (_lfd < 0) {
-                return false;
-            }
-        }
 
         }
         return true;
@@ -153,7 +119,7 @@ namespace AHAOAHA {
 
 
 
-    bool Logger::InitTime() {
+    bool Logger::SetSecondDayTime() {
         //设置第二天0点时间戳
         time_t now = time(NULL);
         struct tm* ptoday = localtime(&now);
@@ -165,3 +131,4 @@ namespace AHAOAHA {
         _tv = seconds;
     }
 }
+
