@@ -23,7 +23,7 @@ unsigned int IpToInt(std::string ip) {
         start_pos = pos + 1;
     }
 
-    std::cout << "part[0]: " << ip_int_part[0]
+    std::cout << "part[0]: "  << ip_int_part[0]
               << " part[1]: " << ip_int_part[1]
               << " part[2]: " << ip_int_part[2]
               << " part[3]: " << ip_int_part[3]

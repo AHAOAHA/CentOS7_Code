@@ -1,7 +1,10 @@
-TARGET=$(shell basename $(PWD))
+.PHONY:all
+all:IntToIp IpToInt
+IntToIp:IntToIp.cpp
+	g++ $^ -o $@
+IpToInt:IpToInt.cpp
+	g++ $^ -o $@
 
-main:IpToInt.cpp
-	g++ $^ -o $(TARGET)
-
+.PHONY:clean
 clean:
-	rm -r $(TARGET)
+	rm -r IntToIp IpToInt
