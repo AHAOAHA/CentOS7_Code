@@ -7,8 +7,15 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<string.h>
+#include<iostream>
+using namespace std;
 int main()
 {
-  printf("\a");
-  return 0;
+    char *buf = "hello \\0sorld!";
+    int ret = write(1, buf, 1000);
+
+
+    cout << "ret: " << ret << endl;
+
+    return 0;
 }

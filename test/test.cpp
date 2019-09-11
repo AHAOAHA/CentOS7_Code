@@ -3,9 +3,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string>
 
 using std::cout;
 using std::endl;
+/*
 
 void IToStr(std::string& str, int fd) {
   std::string tmp;
@@ -41,4 +43,52 @@ int main()
     count++;
     sleep(1);
   }
+}
+
+*/
+
+typedef void (*pF)();
+
+class base {
+  public:
+    virtual void f() {
+      cout << "base::hello world!" << endl;
+    }
+};
+
+class dec : public base {
+  public:
+    virtual void f() {
+      cout << "dec::hello world!" << endl;
+    }
+};
+
+void TestString() {
+  std::string s;
+
+  s = "aaa";
+
+  s.resize(100);
+
+  cout << s << endl;
+
+  write(1, s.c_str(), s.size());
+
+}
+
+int main() {
+  /*
+  base b;
+  dec d;
+  pF* pb = (pF*)&b;
+  pF* pd = (pF*)&d;
+
+  pF = (pF)(*pb);
+
+  b.f();
+  */
+  TestString();
+
+  
+  return 0;
 }
