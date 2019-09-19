@@ -25,5 +25,7 @@ int main() {
 
     AHAOAHA::PreOrder(head); // 前序遍历
     AHAOAHA::MidOrder(head);
+    AHAOAHA::BakOrder(head);
+
     return 0;
 }

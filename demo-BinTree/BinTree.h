@@ -67,6 +67,35 @@ namespace AHAOAHA {
 
         std::cout << std::endl;
     }
+
+    //后序遍历二叉刷
+    template<class T>
+    void BakOrder(Node<T>* root) {
+        std::stack<Node<T>*> st;
+        std::stack<Node<T>*> output;
+        Node<T>* cur = root;
+
+        while(cur != nullptr || !st.empty()) {
+            while(cur) {
+                st.push(cur);
+                output.push(cur);
+
+                cur = cur->_right;
+            }
+            if(!st.empty()) {
+                cur = st.top();
+                st.pop();
+                cur = cur->_left;
+            }
+        }
+
+        while(!output.empty()) {
+            std::cout << output.top()->_val << " ";
+            output.pop();
+        } 
+
+        std::cout << std::endl;
+    }
 }
 
 
