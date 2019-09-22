@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <stack>
+#include <queue>
 
 
 template <class T>
@@ -93,6 +94,30 @@ namespace AHAOAHA {
             std::cout << output.top()->_val << " ";
             output.pop();
         } 
+
+        std::cout << std::endl;
+    }
+
+    //层序遍历
+    template <class T>
+    void LevelOrder(Node<T>* root) {
+        std::queue<Node<T>*> qe;
+        Node<T>* cur = root;
+        if(cur == nullptr)
+            return;
+        qe.push(cur);
+        while(!qe.empty()) {
+            cur = qe.front();
+            qe.pop();
+
+            std::cout << cur->_val << " ";
+
+            if (cur->_left)
+                qe.push(cur->_left);
+
+            if (cur->_right)
+                qe.push(cur->_right);
+        }
 
         std::cout << std::endl;
     }
