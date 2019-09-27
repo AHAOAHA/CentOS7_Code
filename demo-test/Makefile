@@ -1,7 +1,7 @@
 .PHONY:all
 all:main
 main:main.cpp
-	g++ $^ -o $@
+	g++ $^ -o $@ -std=c++11
 .PHONY:clean
 clean:
 	rm -rf main

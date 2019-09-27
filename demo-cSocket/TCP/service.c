@@ -77,7 +77,7 @@ int main()
     perror("listen error ...");
     exit(EXIT_FAILURE);
   }
-  printf("please wait ...\n");
+  //printf("please wait ...\n");
   while(1)
   {
     //接受连接请求
@@ -87,7 +87,8 @@ int main()
       perror("accept error ...");
       exit(EXIT_FAILURE);
     }
-    printf("connect success ...\n");
+    //printf("connect success ...\n");
+    /*
     while(1)
     {
       pthread_t recthread;
@@ -98,6 +99,9 @@ int main()
       //向客户端发送消息
       
     }
+    */
+
+   printf("clientfd: [%d]\n", accept_ret);
   }
     
     

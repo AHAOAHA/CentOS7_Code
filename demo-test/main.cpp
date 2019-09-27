@@ -21,9 +21,23 @@ class Test {
         }
 };
 
+void TestA() {
+    cout << "hello world!" << endl;
+}
+
 int main() {
     Test t;
-    Test::EchoAddr();
+    //Test::EchoAddr();
     //cout << (int*)Test::Echo << endl;
+    auto p = TestA;
+    if(p == *TestA) {
+        cout << "1" << endl;
+    }
+    if(p == &TestA) {
+        cout << "2" << endl;
+    }
+    if(TestA == &&TestA) {
+        cout << "3" << endl; 
+    }
     return 0;
 }
