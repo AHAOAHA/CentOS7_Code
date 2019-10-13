@@ -36,8 +36,8 @@ int main() {
     if(p == &TestA) {
         cout << "2" << endl;
     }
-    if(TestA == &&TestA) {
-        cout << "3" << endl; 
+    if(TestA == &TestA) {
+        cout << "3" << endl;
     }
     return 0;
 }

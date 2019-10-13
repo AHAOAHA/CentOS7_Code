@@ -22,11 +22,12 @@ int main() {
     head->_right = new Node<int>(6);
     head->_left->_left = new Node<int>(2);
     head->_left->_right = new Node<int>(5);
+    
 
     AHAOAHA::PreOrder(head); // 前序遍历
     AHAOAHA::MidOrder(head);
     AHAOAHA::BakOrder(head);
     AHAOAHA::LevelOrder(head);
-
+    
     return 0;
 }

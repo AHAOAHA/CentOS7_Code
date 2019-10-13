@@ -6,8 +6,13 @@
  * Date: 2019-09-25 21:00:47 (星期三)
  * Describe: 
  *************************************************/
+/*
+ * 1->2->3->4->5->null
+ * 以K个为一组反转单链表
+ */
 #include <iostream>
-
+#include <vector>
+using namespace std;
 
 template <class T>
 struct Node {
@@ -27,6 +32,7 @@ void EchoList(Node<T>* head) {
     std::cout << std::endl;
 }
 
+/*
 template <class T>
 void _ReserveList(Node<T>* begin, Node<T>* end) {
     Node<T>* first = nullptr;
@@ -75,6 +81,46 @@ void ReserveList(Node<T>* head, int count) {
 
     }
 }
+*/
+
+template<class T>
+void ReserveList(Node<T>* head, int k) {
+    if (head == nullptr) {
+        return;
+    }
+    Node<T>* cur = head;
+
+    vector<T> v;
+    //将链表存进vector
+    while(cur) {
+        v.push_back(cur->_val);
+        cur = cur->_next;
+    }
+
+    //每k个进行反转
+    int begin = 0;
+    int end = 0;
+    end = begin + k;
+    while(end < v.size()) {
+        int left = begin;
+        int right = end;
+        while(left < right) {
+            swap(v[left], v[right]);
+            left++;
+            right--;
+        }
+        begin = end + 1;
+        end = begin + k;
+    }
+
+    //vector里面即为list的新顺序
+    int index = 0;
+    cur = head;
+    while(cur) {
+        cur->_val = v[index++];
+        cur = cur->_next;
+    }
+}
 
 int main() {
     Node<int>* head = new Node<int>(1);
@@ -85,7 +131,7 @@ int main() {
 
     EchoList(head);
 
-    ReserveList(head, 2);
+    ReserveList(head, 1);
 
     EchoList(head);
 
