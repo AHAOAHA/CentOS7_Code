@@ -84,7 +84,7 @@ void ReserveList(Node<T>* head, int count) {
 */
 
 template<class T>
-void ReserveList(Node<T>* head, int k) {
+void ReserveListByVec(Node<T>* head, int k) {
     if (head == nullptr) {
         return;
     }
@@ -131,7 +131,7 @@ int main() {
 
     EchoList(head);
 
-    ReserveList(head, 1);
+    ReserveListByVec(head, 1);
 
     EchoList(head);
 

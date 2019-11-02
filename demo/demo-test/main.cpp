@@ -7,6 +7,7 @@
  * Describe: 
  *************************************************/
 #include <iostream>
+#include <semaphore.h>
 
 using namespace std;
 
@@ -29,15 +30,18 @@ int main() {
     Test t;
     //Test::EchoAddr();
     //cout << (int*)Test::Echo << endl;
-    auto p = TestA;
-    if(p == *TestA) {
-        cout << "1" << endl;
-    }
-    if(p == &TestA) {
-        cout << "2" << endl;
-    }
-    if(TestA == &TestA) {
-        cout << "3" << endl;
-    }
+    //auto p = TestA;
+    //if(p == *TestA) {
+    //    cout << "1" << endl;
+    //}
+    //if(p == &TestA) {
+    //    cout << "2" << endl;
+    //}
+    //if(TestA == &TestA) {
+    //    cout << "3" << endl;
+    //}
+    sem_t sem;
+    sem_init(&sem, 1, 1);
+    while(1);
     return 0;
 }
