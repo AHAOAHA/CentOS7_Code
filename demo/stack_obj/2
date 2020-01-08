@@ -1,7 +1,0 @@
-#include"./stack_obj.h"
-int main()
-{
-  stack_obj::GetObj();
-  new stack_obj;
-  return 0;
-}

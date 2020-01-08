@@ -1,3 +1,0 @@
-/home/ahaoozhang/dev_code/c++/helloworld-cmake/helloworld-v2/build/CMakeFiles/rebuild_cache.dir
-/home/ahaoozhang/dev_code/c++/helloworld-cmake/helloworld-v2/build/CMakeFiles/hello.dir
-/home/ahaoozhang/dev_code/c++/helloworld-cmake/helloworld-v2/build/CMakeFiles/edit_cache.dir

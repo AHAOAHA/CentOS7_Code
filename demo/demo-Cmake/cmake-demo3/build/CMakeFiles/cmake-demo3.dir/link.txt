@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/cmake-demo3.dir/main.cpp.o  -o cmake-demo3  -L/home/ahaoozhang/dev_code/c++/cmake-demo/cmake-demo3/lib -Wl,-rpath,/home/ahaoozhang/dev_code/c++/cmake-demo/cmake-demo3/lib -lhello 

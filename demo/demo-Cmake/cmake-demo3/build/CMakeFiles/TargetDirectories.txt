@@ -1,3 +1,0 @@
-/home/ahaoozhang/dev_code/c++/cmake-demo/cmake-demo3/build/CMakeFiles/rebuild_cache.dir
-/home/ahaoozhang/dev_code/c++/cmake-demo/cmake-demo3/build/CMakeFiles/cmake-demo3.dir
-/home/ahaoozhang/dev_code/c++/cmake-demo/cmake-demo3/build/CMakeFiles/edit_cache.dir
